@@ -1,0 +1,300 @@
+.appointment_made_modal,
+.terms_and_c_modal{
+    width: 100vw;
+    position: fixed;
+    display: none;
+    z-index:2;
+    min-height: 100vh;
+    background: rgb(0,0,0,.6)
+}
+.appointment_made_modal_content, 
+.terms_and_c_modal_content {
+    position: fixed;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: auto;
+    width: 66vw;
+    margin: 0 auto;
+    transform: translate(25%, 14%);
+    text-align: center;
+    padding: 2em 2em;
+    background: aliceblue;
+    box-shadow: 2px 4px 20px 0px black;
+}
+
+.appointment_made_modal_content {
+    min-height: 69vh;
+}
+.terms_and_c_modal_content{
+    min-height: 75vh;
+}
+
+.terms_and_c_modal_content a:hover {
+    color: orange;
+}
+
+.btns_container{
+    display: flex;
+    justify-content: center;
+}
+
+.btns_container a{
+    margin: 0em .5em;
+}
+.user_top_part {
+    padding: 0.5em 1em;
+    display: flex;
+    align-items: center;
+}
+
+.user_top_part img {
+    width: 20vw;
+    margin: 0em 1.2em;
+}
+
+.see_all_appointments_btn , 
+.cancelApptBtn{
+    display: grid;
+    width: 12vw;
+    color: white;
+    place-items: center;
+    border: 1px solid #eee;
+    cursor: pointer;
+}
+.see_all_appointments_btn{
+    background: green;
+}
+
+.cancelApptBtn{
+    background: red;
+}
+
+.cancelApptBtn:hover{
+    background: white;
+    color: red;
+}
+
+.see_all_appointments_btn:hover {
+    background: white;
+    color: green;
+}
+
+
+
+.create_appointment_form {
+    padding: 1em 2em;
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+}
+
+h3{
+    margin:2em 0em;
+}
+
+.container {
+    margin: 1.3em 0em;
+}
+
+
+
+
+.display{
+    display: block;
+}
+
+.months_container {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    width: 66vw;
+    margin: 1em auto;
+    text-align: center;
+    grid-gap: 1em;
+}
+
+.month {
+    background: rgb(255, 255, 240);
+    padding: 1em;
+    cursor: pointer;
+}
+
+.month:hover{
+    background: rgb(128, 0, 0) !important;
+    color: #fff !important;
+}
+
+.day {
+    background: aliceblue;
+    width: 5vw;
+    height: 5vw;
+    display: grid;
+    border-radius: 50%;
+    place-items: center;
+    cursor: pointer;
+}
+
+.day:hover{
+    background: green !important;
+    color: #fff !important;
+}
+
+.calendar_container_m , 
+.time_slot_container_m{
+    margin-top: 2em;
+    margin-bottom: 2em;
+    display: none;
+}
+
+
+.keyContainer {
+    display: flex;
+    justify-content: center;
+}
+
+.keyState {
+    margin: 0em 1em;
+    display: flex;
+    align-items: center;
+}
+
+.circleState {
+    width: 1.5vw;
+    height: 1.5vw;
+    border-radius: 50%;
+    margin-right: .5em;
+}
+
+.closedState {
+    background: orange;
+}
+.fullState {
+    background: red;
+}
+.availableState {
+    background: aliceblue;
+    border: 1px solid rgb(0,0,0,.2);
+}
+
+.selectedState{
+    background: green;
+}
+
+.keyState h5 {
+    font-size: 1.7vw;
+}
+
+.calendar_container{
+    display: grid;
+    place-items: center;
+    grid-template-columns: auto auto auto auto auto auto auto;
+    margin: 1em 0em;
+    text-align: center;
+    grid-gap: 1em;
+}
+.dayOfWeek {
+    font-size: 1.5vw;
+}
+
+.time_slot_container {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    text-align: center;
+    margin: 2em 0em;
+    grid-gap: 1em;
+}
+
+.original_bg_timeslot{
+    background: aliceblue;
+}
+
+.timeslot {
+    padding: 1em;
+    /* background: aliceblue; */
+    border-radius: 50px;
+    cursor: pointer;
+}
+
+.timeslot:hover{
+    background: green;
+    color: #fff;
+}
+
+.terms_container {
+    margin: 2em 0em;
+}
+
+.open_terms_btn {
+    border: 1px solid #eee;
+    padding: .5em;
+    cursor: pointer;
+    width: 22vw;
+    box-shadow: -5px 8px 29px rgba(0, 0, 0, 0.25);
+    border: none;
+    text-align: center;
+}
+
+.accept_btn {
+    display: flex;
+    align-items: center;
+    margin-top: 1.3em;
+}
+
+#accept_terms_checkbox {
+    margin-right: .5em;
+}
+
+#create_appointment_btn, 
+.update_appointment_btn {
+    padding: .5em;
+    width: 40vw;
+    margin: 0 auto;
+    display: grid;
+    border-radius: 26px;
+    background: #1BA1E2;
+    box-shadow: 25px 4px 29px rgba(0, 0, 0, 0.25);
+    border: none;
+}
+
+#create_appointment_btn:hover,
+.update_appointment_btn:hover {
+    background: green;
+    color: white;
+}
+
+
+@media(max-width:600px){
+    .appointment_made_modal,
+    .terms_and_c_modal{
+        cursor: pointer;
+    }
+    .create_appointment_form {
+        padding: 1em 1em;
+    }
+    .months_container,
+    .calendar_container{
+        width: fit-content;
+    }
+    .keyState h5{
+        font-size: unset;
+    }
+    .dayOfWeek {
+        font-size: 2.5vw;
+    }
+    .day{
+        width:8vw;
+        height:8vw;
+    }
+    .open_terms_btn{
+        width:40vw;
+    }
+    .appointment_made_modal_content, .terms_and_c_modal_content {
+        width: 76vw;
+        margin: 31vh 12vw;
+        min-height: 32vh;
+        transform: unset;
+    }
+    .see_all_appointments_btn{
+        width: 36vw;
+    }
+
+}

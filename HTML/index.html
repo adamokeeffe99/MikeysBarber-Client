@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="C:\Users\Adam O'Keeffe\OneDrive - University College Cork\Desktop\FYP-Visual Studios\CSS\index.css">
+    <link rel="stylesheet" href="C:\Users\Adam O'Keeffe\OneDrive - University College Cork\Desktop\FYP-Visual Studios\CSS\hompage.css">
+    
+  
+
+</head>
+<body>
+ <div class="wrapper">
+     <div class="appointment_made_modal"></div>
+     <div class="user_top_part">
+        <img src="C:\Users\Adam O'Keeffe\OneDrive - University College Cork\Desktop\FYP-Visual Studios\Images\106264258_131400021944999_1679758630191328330_n.jpg" alt="This is a picture of Mikeys Logo"/>
+         <title>Mikeys Barber Shop | Home</title>
+        </div>
+        <div class="create_appointment_form">
+            <form action=""  method="post">
+                <div class="firstName_container container">
+                    <label for="firstName">First Name</label>
+                    <input type="text" name="firstName" id="firstName"
+                    class="name" required>
+            </div>
+            <div class="surname_container container">
+                <label for="surname">Surname</label>
+                <input type="text" name="Surname" id="surname"
+                class ="name" required>
+            </div>
+            <div class="email_container container">
+                <label for="email">Email</label>
+                <input type="text" name="Email" id="email" class="name"
+                required>
+            </div>
+            <div class="mobile_container container">
+                <label for="mobile">Mobile No (No Spaces)</label>
+                <input type="tel" name="Mobile" id="mobile" pattern="[0-9]{3}[0-9]{3}[0-9]{4}"
+                title="Please enter a valid mobile number in the form 0871234567"
+                required>
+            </div>
+            <h3>Choose a month from below</h3>
+            <div class="months_container container">
+                <h1 class="month" data-month="0">January</h1>
+                <h1 class="month" data-month="1">February</h1>
+                <h1 class="month" data-month="2">March</h1>
+                <h1 class="month" data-month="3">April</h1>
+                <h1 class="month" data-month="4">May</h1>
+                <h1 class="month" data-month="5">June</h1>
+                <h1 class="month" data-month="6">July</h1>
+                <h1 class="month" data-month="7">August</h1>
+                <h1 class="month" data-month="8">September</h1>
+                <h1 class="month" data-month="9">October</h1>
+                <h1 class="month" data-month="10">November</h1>
+                <h1 class="month" data-month="11">December</h1>
+            </div>
+            <div class="calender_container_m">
+                <h3>Choose your date below</h3>
+                <div class="keyContainer">
+                    <div class="available_container keyState">
+                        <div class="circleState availableState"></div>
+                        <h5>Available</h5>
+                    </div>
+                    <div class="full_container keyState">
+                        <div class="circleState fullState"></div>
+                        <h5>Full</h5>
+                    </div>
+                    <div class="closed_container keyState">
+                        <div class="circleState closedState"></div>
+                        <h5>Closed</h5>
+                    </div>
+                <div class="full_container keyState">
+                    <div class="circleState selectedState"></div>
+                    <h5>Selected</h5>
+                 </div>
+                </div>
+                <div class="calendar_container container">
+                    <h3 class="dayOfWeek">Monday</h3>
+                    <h3 class="dayOfWeek">Tuesday</h3>
+                    <h3 class="dayOfWeek">Wednesday</h3>
+                    <h3 class="dayOfWeek">Thursday</h3>
+                    <h3 class="dayOfWeek">Friday</h3>
+                    <h3 class="dayOfWeek">Saturday</h3>
+                    <h3 class="dayOfWeek">Sunday</h3>
+                    
+
+                </div>
+                
+               
+                </div>
+                </div>
+                <div class="time_slot_container_m">
+                    <h3>Choose a timeslot</h3>
+                    <div class="keyContainer">
+                        <div class="available_container keyState">
+                            <div class="circleState availableState"></div>
+                            <h5>Available</h5>
+                        </div>
+                        <div class="closed_container keyState">
+                            <div class="circleState closedState"></div>
+                            <h5>Not Available</h5>
+                            </div>
+                            <div class="full_container keyState">
+                                <div class="circleState fullState"></div>
+                                <h5>Full</h5>
+                            </div>
+                            <div class="full_container keyState">
+                                <div class="circleState selectedState"></div>
+                                <h5>Selected</h5>
+                            </div>
+                            </div>
+                            <div class="time_slot_container container">
+
+                            </div>
+                            
+                            
+                            <input type="submit" value="Create Appointment" 
+                            id="create_appointment_btn">
+                        
+                        
+                        </form>
+                        </div>
+                        </div>
+</body>
+</html>
+                    
+
+
+
+
