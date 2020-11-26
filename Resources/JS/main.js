@@ -536,7 +536,7 @@ const displayDaysIrrelevant = (days , dayStarted) => {
     if(dayStarted !== null) {
         days.filter(day => day.innerHTML < dayStarted).map(day => day.classList.add('disabled'))
     }
-    days.filter(day => day.dataset.day === "Sunday").map(day => {
+    days.filter(day => day.dataset.day === "Sunday" && day.dataset.day === "Monday").map(day => {
         day.style.background = "orange" 
         day.classList.add('disabled')
     })
