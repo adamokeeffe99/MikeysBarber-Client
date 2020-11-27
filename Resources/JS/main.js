@@ -85,86 +85,6 @@ const displayPastDays = (months,startMonth , place) => {
     let monthSelected = clickMonth(months, startMonth);
     appointment_Details["Month"] = monthSelected.Name
 
-    // Display Calendar and Days That are closed
-    let days = fillInCalendar(monthSelected.Number, monthSelected.NumOfDays, monthSelected.WeekDayNameOfFirstDay, monthSelected.Name),
-        dayStarted = new Date().getDate();
-    if (place === "Clinic")addClinicDays(days)
-    else dealWithDays(days)
-    
-    displayDaysIrrelevant(days , dayStarted)
-
-
-
-
-
-        // Getting the form Data and filling it to appointment_Details
-        let formData = getFormData(form)
-        if (formData.get('card_decision') === null) errMessage.push("Please fill in PPS Number or select the medical card option above")
-        // if (formData.get('card_decision') === null || formData.get('destination_decision') === null) errMessage.push("Please fill in PPS Number or select the medical card option above")
-        whichCard(formData.get('card_decision'), formData)
-        // whichDestination(formData.get('destination_decision'), formData)
-        if(errMessage.length !== 0) {
-            errMessage.filter((error , index) => errMessage.lastIndexOf(error) === index)
-            .map(error => alert(error))
-            errMessage = []
-            return
-        }
-        appointment_Details["firstName"] = formData.get('firstName')
-        appointment_Details["Surname"] = formData.get('Surname')
-        appointment_Details["Mobile"] = formData.get('Mobile')
-        appointment_Details["DOB"] = formData.get('DOB')
-        
-
-        displayAppointmentPopup(appointment_Details)
-        dealWithFormSubmit()
-    }
-
-
-const validateBookingDetails = () => {
-    return appointment_Details["Month"] !== undefined && appointment_Details["DayDate"] !== undefined && appointment_Details["Time"] !== undefined
-}
-
-
-const displayAppointmentPopup = appointment_Details => {
-    let modal = fillinModalDetails(appointment_Details)
-    document.querySelector('.appointment_made_modal').innerHTML = modal;
-    document.querySelector('.appointment_made_modal').style.display = "block"
-    cancelModal(document.querySelector('.appointment_made_modal'))
-}
-
-const cancelModal = modal => {
-    const cancel_btn = document.querySelector('.cancelApptBtn')
-    $(cancel_btn).click(() => {
-        modal.style.display = "none"
-    })
-}
-
-const fillinModalDetails = appointment_made_details => {
-    return `<div class="appointment_made_modal_content">
-                <h2>Hi ${appointment_made_details.firstName} ${appointment_made_details.Surname},</h2>
-                <h4>You requested an appointment for</h4>
-                <div class="date_time_container">
-                    <h3><strong>Date :</strong> ${appointment_made_details.DayName} ${appointment_made_details.DayDate} ${appointment_made_details.Month}</h3>
-                    <h3><strong>Time :</strong> ${appointment_made_details.Time}</h3>
-                </div>
-                <div class="btns_container">
-                    <a class="see_all_appointments_btn">Confirm</a>
-                    <a class="cancelApptBtn">Cancel</a>
-                </div>
-            </div>`
-}
-
-
-
-const makeRequest = () => {
-    return axios.post(`${url}api/v1/appointments`, appointment_Details)
-}
-
-
-
-const getFormData = form => {
-    let formData = new FormData(form)
-    return formData
 }
 
 const dealWithMonths = (place, clinicData, clinicDataSingle) => {
@@ -563,8 +483,6 @@ const dealWithDateChange = date_picker => {
                     <h4 class="container_sm">Time(inc.Date)</h4>
                     <h4 class="container_sm">First Name(s)</h4>
                     <h4 class="container_sm">Surname(s)</h4>
-                    <h4 class="container_sm">DOB(s)</h4>
-                    <h4 class="container_sm">PPS No(s)</h4>
                 </div>
         `
         const SelectedDateTime = getDateTime()
@@ -1026,7 +944,6 @@ $(document).ready(async() => {
         case window.location.pathname === "/" || window.location.pathname === "/Client/":
             getData()
             displayPastMonths()
-            displayPPSInput()
             createAppointmentBtnClick()
             dealWithMonths() 
             dealWithTerms()
@@ -1034,7 +951,6 @@ $(document).ready(async() => {
         case window.location.pathname.includes("index"):
             getData()
             displayPastMonths()
-            displayPPSInput()
             createAppointmentBtnClick()
             dealWithMonths()   
             dealWithTerms()
