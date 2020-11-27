@@ -7,15 +7,15 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js"></script>
     <script src="./Resources/JS/main.js"></script>
-    <title>AOC Bookings | Home </title>
+    <title>Mikeys Barbers Bookings | Home </title>
 </head>
 <body>
     <div class="wrapper">
         <div class="appointment_made_modal"></div>
         <div class="terms_and_c_modal"></div>
         <div class="user_top_part">
-            <img src="Resources/Images/logo.jpg" alt="This is a picture of the AOC logo">
-            AOC BOOKINGS
+            <img src="Resources/Images/logo.jpg" alt="This is a picture of the Mikeys Logo">
+            
         </div>
         <div class="create_appointment_form">
             <form action="" method="post">
@@ -27,44 +27,16 @@
                     <label for="surname">Surname</label>
                     <input type="text" name="Surname" id="surname" class="name" required="">
                 </div>
-                <div class="dob_container container">
-                    <label for="dob">Date Of Birth (DD/MM/YYYY)</label>
-                    <input type="text" name="DOB" id="dob" placeholder="DD/MM/YYYY" pattern="^((\d{1,2})(\/)(\d{1,2})(\/)(\d{4}))" title="Please enter a dob in the form DD/MM/YYYY" required="">
-                </div>
+               
                 <div class="mobile_container container">
                     <label for="mobile">Mobile No. (No Spaces)</label>
                     <input type="tel" name="Mobile" id="mobile" pattern="[0-9]{3}[0-9]{3}[0-9]{4}" title="Please enter a valid mobile number in the form 0861234567" required="">
                 </div>
-                <h3>Choose an option from below</h3>
-                <div class="card_decision_container container">
-                    <div class="medical_card_container card_container">
-                        <input type="radio" name="card_decision" id="Medical Card" class="Medical_Card" value="Medical_Card">
-                        <label for="Medical_Card" class="label_radio">I have a Medical Card</label>
-                    </div>
-                    <div class="PPS_number_container card_container">
-                        <input type="radio" name="card_decision" id="PPS_Number" class="PPS_Number" value="PPS_Number">
-                        <label for="PPS_Number" class="label_radio">I have my PPS Number</label>
-                    </div>
-                </div>
-                <div class="pps_number_input_container">
-                    <label for="PPS_Number_Input">PPS Number.</label>
-                    <input type="text" name="PPS_Number_Input" id="PPS_Number_Input" pattern="(^[0-9]{7}[A-Z]{1,2})" title="Please enter a valid pps number in the form 0000000AB" placeholder="1234567AB">
-                </div>
-                <!-- <h3>Choose a desired method / destination from below</h3>
-                <div class="destination_decision_container container">
-                    <div class="surgery_container decision_container">
-                        <input type="radio" name="destination_decision" id="Surgery" class="Surgery" value="Surgery">
-                        <label for="Surgery" class="label_radio">Surgery</label>
-                    </div>
-                    <div class="drive_through_container decision_container">
-                        <input type="radio" name="destination_decision" id="Drive_Through" class="Drive_Through" value="Drive_Through">
-                        <label for="Drive_Through" class="label_radio">Drive Through</label>
-                    </div>
-                </div>
-                <div class="car_reg_container container">
-                    <label for="car_reg">Car Reg.</label>
-                    <input type="text" name="Car_Reg_Input" id="car_reg" pattern="(^[0-9]{1,3})-([A-Z]{1,2})-([0-9]{1,5})" title="Please enter a valid car registration number in the form ???-??-?????" placeholder="02-D-15679">
-                </div> -->
+              <div class="email_container container">
+              <label for="email">Email</label>
+              <input type="text" name="Email" id="email" required="">
+            </div>
+              
                 <h3>Choose a month from below</h3>
                 <div class="months_container container">
                     <h1 class="month disabled" data-month="0" style="background: aliceblue; color: black;">January</h1>
