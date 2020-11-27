@@ -92,85 +92,10 @@ const displayPastDays = (months,startMonth , place) => {
     else dealWithDays(days)
     
     displayDaysIrrelevant(days , dayStarted)
-}
 
 
-const dealWithFormUpdate = async() => {
-    const formUpdate = document.querySelector('.form_Update'),
-        user_id = new URLSearchParams(new URL(window.location.href).search).get("userId"),
-        appointment_id = new URLSearchParams(new URL(window.location.href).search).get("id");
-        // { data: userDetails } = await axios.get(`${url}api/v1/appointments/${user_id}`);
-    $(formUpdate).submit(e => {
-        e.preventDefault()
-        let bookingDetailsValidated = validateBookingDetails()
-        if (!bookingDetailsValidated) {
-            alert("Please pick a valid month, date and time before progressing")
-            return
-        }
-        appointment_Details["userId"] = user_id
-        updateAppointment(appointment_id)
-    })
-}
 
 
-const dealWithFormSubmit = () => {
-    const actual_create_btn = document.querySelector('.see_all_appointments_btn');
-    let submitted = false
-    $(actual_create_btn).click(e => {
-        /**
-         * Because of await making the call stack perform same thing again
-         * This was making it send two requests and insert two records into the DB
-         * This is a fix for this, 
-         * Look for info or something that should have a value already from the first time
-         */
-        if (submitted) return
-        submitted = true
-
-        // Calls the method to perform the async function to post my data 
-        makeAppointment()
-    })
-} 
-
-const updateAppointment = async (appt_id) => {
-    try {
-        const { data: Users_Appointments } = await axios.put(`${url}api/v1/appointments/${appt_id}`, appointment_Details)
-        window.location = `userView.html?id=${Users_Appointments._id}`
-    } catch (error) {
-        console.log(error)
-    }
-}
-
-const deleteAppointment = async (id, userID , place) => {
-    try {
-        const { data: Users_Appointments } = await axios.delete(`${url}api/v1/appointments/${id}?userId=${userID}`)
-        if(place === "Client") window.location = `userView.html?id=${ Users_Appointments._id}`
-        else window.location = `AdminHome.html`
-    } catch (error) {
-        console.log(error)
-    }
-}
-
-
-const makeAppointment = async() => {
-    try {
-        const { data: Users_Appointments }= await makeRequest()
-        window.location = `userView.html?id=${Users_Appointments._id}`
-        return appointment
-    } catch (error) {
-        console.log(error)
-    }    
-}
-
-const createAppointmentBtnClick = () => {
-    const form = document.querySelector('form');
-    $(form).submit(e => {
-        e.preventDefault()
-
-        let bookingDetailsValidated = validateBookingDetails()
-        if(!bookingDetailsValidated) {
-            alert("Please pick a valid month, date and time before progressing")
-            return
-        }
 
         // Getting the form Data and filling it to appointment_Details
         let formData = getFormData(form)
@@ -192,8 +117,8 @@ const createAppointmentBtnClick = () => {
 
         displayAppointmentPopup(appointment_Details)
         dealWithFormSubmit()
-    })
-}
+    }
+
 
 const validateBookingDetails = () => {
     return appointment_Details["Month"] !== undefined && appointment_Details["DayDate"] !== undefined && appointment_Details["Time"] !== undefined
