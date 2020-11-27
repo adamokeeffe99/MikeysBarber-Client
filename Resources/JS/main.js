@@ -95,21 +95,6 @@ const displayPastDays = (months,startMonth , place) => {
 }
 
 
-const displayPPSInput = () =>{
-    $(document.querySelector('.PPS_Number')).get(0).onclick = () => {
-        document.querySelector('.pps_number_input_container').classList.add("display")
-    }
-    $(document.querySelector('.Medical_Card')).get(0).onclick = () => {
-        document.querySelector('.pps_number_input_container').classList.remove("display")
-    }
-    // $(document.querySelector('.Drive_Through')).get(0).onclick = () => {
-    //     document.querySelector('.car_reg_container').classList.add("display")
-    // }
-    // $(document.querySelector('.Surgery')).get(0).onclick = () => {
-    //     document.querySelector('.car_reg_container').classList.remove("display")
-    // }
-}
-
 const dealWithFormUpdate = async() => {
     const formUpdate = document.querySelector('.form_Update'),
         user_id = new URLSearchParams(new URL(window.location.href).search).get("userId"),
@@ -250,26 +235,7 @@ const makeRequest = () => {
     return axios.post(`${url}api/v1/appointments`, appointment_Details)
 }
 
-const whichCard = (value , formData) => {
-    if(value === "Medical_Card"){
-        appointment_Details["Medical_Card"] = true
-        appointment_Details["PPS_Number"] = false
-    } else if (value === "PPS_Number"){
-        appointment_Details["Medical_Card"] = false
-        if (formData.get('PPS_Number_Input') && formData.get('PPS_Number_Input') !== "") appointment_Details["PPS_Number"] = formData.get('PPS_Number_Input')
-        else return errMessage.push("You did not fill in a PPS Value")
-    }
-}
-const whichDestination = (value , formData) => {
-    if(value === "Surgery"){
-        appointment_Details["Surgery"] = true
-        appointment_Details["Car_Reg"] = false
-    } else if (value === "Drive_Through"){
-        appointment_Details["Surgery"] = false
-        if(formData.get('Car_Reg_Input') && formData.get('Car_Reg_Input') !== "") appointment_Details["Car_Reg"] = formData.get('Car_Reg_Input')
-        else return errMessage.push("You did not fill in a Car Registration Value")
-    }
-}
+
 
 const getFormData = form => {
     let formData = new FormData(form)
@@ -481,7 +447,7 @@ const checkAgainstAppointments = () => {
 }
 
 const checkTime = (timeNow, timeSlotContainers) => {
-    // This does four checks to find the available slots for patients 
+    // This does four checks to find the available slots for clients 
     /**
      * 1) Checks the date is equal to the date the user specifies 
      * 2) Checks against the clinic hours 
