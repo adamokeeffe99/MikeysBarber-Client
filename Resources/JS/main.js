@@ -490,7 +490,7 @@ const adminLogin = () => {
             return
         }
         sessionStorage.setItem("Admin", "LoggedIn");
-        window.location = "adminHome.html"
+        window.location = "adminhome.html"
     })
 }
 
@@ -498,7 +498,7 @@ const adminLogout = () => {
     const logout_btn = document.querySelector('.logout')
     $(logout_btn).click(()=> {
         sessionStorage.removeItem("Admin");
-        window.location = "AdminLogin.html"
+        window.location = "adminlogin.html"
     })
 }
 
