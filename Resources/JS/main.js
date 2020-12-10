@@ -1,6 +1,6 @@
 // Global Variable Declarations and Function Definitions
 const appointment_Details = {},
-    url = "https://aoc-bookings.herokuapp.com/";
+    url = "https://mikeysbarber.herokuapp.com/";
 let appointments_Saved = [],
     appointments_Data = [],
     clinic_Data = [],
