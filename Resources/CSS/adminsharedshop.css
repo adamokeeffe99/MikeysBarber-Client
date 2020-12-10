@@ -1,0 +1,201 @@
+.main_container {
+    display: grid;
+    min-height: 100vh;
+    position: relative;
+}
+
+.top_part {
+    position: relative;
+}
+
+.top_part_inner {
+    display: flex;
+    justify-content: space-between;
+    margin: 1em 1em;
+    align-items: center;
+}
+
+
+
+aside {
+    background: orange;
+    display: grid;
+    position: fixed;
+    height: 100vh;
+    top:0;
+    left:0;
+    width: 20vw;
+    place-items: center;
+}
+
+.options_container {
+    width: 100%;
+}
+
+.options_container h1 {
+    width: 100%;
+    padding: .5em 0em;
+    text-align: center;
+    cursor: pointer;
+}
+
+.logout {
+    cursor: pointer;
+    font-size: 1.8vw;
+}
+
+.top_part_inner img {
+    width: 13vw;
+}
+
+.choose_date ,
+.choose_hours{
+    margin: 1em 1em
+}
+
+.months_container {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    width: 66vw;
+    margin: 1em auto;
+    text-align: center;
+    grid-gap: 1em;
+}
+
+.month {
+    background: aliceblue;
+    padding: 1em;
+    cursor: pointer;
+}
+
+.month:hover{
+    background: green !important;
+    color: #fff !important;
+}
+
+.day {
+    background: aliceblue;
+    width: 5vw;
+    height: 5vw;
+    display: grid;
+    border-radius: 50%;
+    place-items: center;
+    cursor: pointer;
+}
+
+.day:hover{
+    background: green !important;
+    color: #fff !important;
+}
+
+.calendar_container_m , 
+.time_slot_container_m{
+    margin-top: 2em;
+    margin-bottom: 2em;
+    display: none;
+}
+
+
+.keyContainer {
+    display: flex;
+    justify-content: center;
+}
+
+.keyState {
+    margin: 0em 1em;
+    display: flex;
+    align-items: center;
+}
+
+.circleState {
+    width: 1.5vw;
+    height: 1.5vw;
+    border-radius: 50%;
+    margin-right: .5em;
+}
+
+.closedState {
+    background: orange;
+}
+.fullState {
+    background: red;
+}
+.availableState {
+    background: aliceblue;
+    border: 1px solid rgb(0,0,0,.2);
+}
+
+.selectedState{
+    background: green;
+}
+
+.keyState h5 {
+    font-size: 1.7vw;
+}
+
+.calendar_container{
+    display: grid;
+    place-items: center;
+    grid-template-columns: auto auto auto auto auto auto auto;
+    margin: 1em 0em;
+    text-align: center;
+    grid-gap: 1em;
+}
+.dayOfWeek {
+    font-size: 1.5vw;
+}
+
+
+.clinicTimeslotsContainerInner {
+    grid-template-columns: auto auto auto auto auto auto ;
+    padding: 0em 1em;
+    grid-gap: 1em;
+    place-items: center;
+    display: grid;
+} 
+
+.timeslot_Clinic {
+    border: 1px solid #eee;
+    width: 11vw;
+    height: 5vw;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    font-size: 1.5vw;
+}
+
+.timeslot_Clinic:hover{
+    background: orange;
+}
+
+.Providers_container {
+    padding: 1em 0em;
+}
+
+.clinicTimeslotsContainer h2, 
+.Providers_container h2 {
+    font-size: 1.5vw;
+    margin: 1em 1.2em;
+}
+
+.Providers_container_inner h4 {
+    font-size: 1.6vw;
+}
+.Providers_container_inner {
+    padding: .3em 0em;
+    display: flex;
+    width: 28vw;
+    justify-content: center;
+    align-items: center;
+}
+
+#providers_input {
+    width: 5vw;
+    margin: 0em 1em;
+    border: 2px solid rgb(0,0,0,.1);
+}
+
+.slot_taken{
+    background: red;
+    color:white;
+}
