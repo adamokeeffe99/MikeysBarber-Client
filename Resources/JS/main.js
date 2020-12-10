@@ -708,7 +708,7 @@ const getClinicData = async() => {
     return clinicData
 }
 
-const adminClinicHomeInit = async() => {
+const adminshophomeInit = async() => {
     const clinicData = await getClinicData()
     $(`.options_container h1:contains("Clinic")`)[0].style.background = "#fff"
     dealWithTabs()
@@ -863,7 +863,7 @@ const getClinicSlotSingle = async(id) => {
 const makeClinicPost = async(newClinicSlot) => {
     try {
         await axios.post(`${url}api/v1/clinics`, newClinicSlot)
-        window.location = "AdminClinicHome.html"
+        window.location = "adminshophome.html"
     } catch (error) {
         console.log(error)
     }
@@ -872,7 +872,7 @@ const makeClinicPost = async(newClinicSlot) => {
 const deleteClinicSlot = async(id) => {
     try {
         await axios.delete(`${url}api/v1/clinics/${id}`)
-        window.location = "AdminClinicHome.html"
+        window.location = "adminshophome.html"
     } catch (error) {
         console.log(error)
     }
@@ -881,7 +881,7 @@ const deleteClinicSlot = async(id) => {
 const makeClinicUpdate = async (clinic_updated_data, id) => {
     try {
         await axios.put(`${url}api/v1/clinics/${id}`, clinic_updated_data)
-        window.location = "AdminClinicHome.html"
+        window.location = "adminshophome.html"
     } catch (error) {
         console.log(error)
     }
@@ -1032,7 +1032,7 @@ $(document).ready(async() => {
             adminInit()
             adminLogout()
             break   
-        case window.location.pathname.toLowerCase().includes("adminclinichome"):
+        case window.location.pathname.toLowerCase().includes("adminshophome"):
             adminClinicHomeInit()
             adminLogout() 
             break 
