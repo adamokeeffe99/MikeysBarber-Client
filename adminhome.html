@@ -4,58 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./Resources/Stylesheets/basics.css">
-    <link rel="stylesheet" href="./Resources/Stylesheets/adminhome.css">
+    <link rel="stylesheet" href="./Resources/Stylesheets/sharedClinic.css">
+    <link rel="stylesheet" href="./Resources/Stylesheets/adminClinicHome.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js"></script>
     <script src="./Resources/JS/main.js"></script>
-    <title>Mikeys Barber Shop | Admin Home</title>
+    <title>AOC Bookings | Admin Clinic</title>
 </head>
 <body>
     <div class="wrapper">
         <div class="main_container">
             <div class="top_part">
                 <div class="top_part_inner">
-                    <img src="./Resources/Images/logo.jpg" alt="This is a picture of the shop logo">
+                    <img src="./Resources/Images/AOCLogo.jpg" alt="">
                     <h3 class="logout">Log Out</h3>
-                    </div>
+                </div>
+                <div class="slot_container">
+                    <a href="AdminShopAdd.html" class="slot_add_btn">
+                        <i class="fa fa-plus" aria-hidden="true"></i>
+                        Add Slot
+                    </a>
+                </div>
             </div>
+            
+            <div class="clinic_slots_container"></div>
             <aside>
                 <div class="options_container">
-                    <h1>Barber Shop</h1>
-                    <h1 style="background: rgb(255, 255, 255);">Appointments</h1>
+                    <h1>Clinic</h1>
+                    <h1>Appointments</h1>
                 </div>
             </aside>
-            <div class="filter_container">
-                <input type="datetime-local" name="date_picker_input"
-                id="date_picker_input">
-                <div class="search container">
-                    <input type="search" name="search_input" id="search_input">
-                    <div class="search_btn">
-                        <i class="fa fa-search" aria-hidden="true"></i>
-                    </div>
-                    <div class="numberOfUsers">Number Of Patients: </div>
-                    <div class="numberOfAppointments">Overall No. Of Appointments: 
-                         </div>
-                         <div class="button_options">
-                             <div class="print_btn">Print</div>
-                         </div>
-                </div>
-                <div class="main_container_m">
-                    <div class="headings">
-                        <h4 class="container_sm">Time(inc.Date</h4>
-                        <h4 class="container_sm">First Name(s)</h4>
-                        <h4 class="container_sm">Surname(s)</h4>
-                        <h4 class="container_sm">Mobile Number(s)</h4>
-                        <h4 class="container_sm">Email Address(s)</h4>
 
-                    </div>
-            </div>
-            </div>
-            <div class="numberOfAppointments">
-
-            </div>
-        </body>
-</html>
-        
+        </div>
+    </div>
+</body>
+</html>   
