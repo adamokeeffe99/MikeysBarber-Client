@@ -1,0 +1,178 @@
+.user_top_part {
+    padding: 0.5em 1em;
+}
+
+.userHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.top_buttons_container {
+    display: flex;
+    align-items: center;
+}
+.user_top_part img {
+    width: 13vw;
+    margin: 0em 1.2em;
+}
+
+.appointment_display_container_main {
+    padding: 2em 2em;
+}
+
+.appointment_display_container_inner {
+    display: grid;
+    grid-template-columns: auto;
+    min-height: 40vh;
+    margin-top: 1em;
+}
+
+.appointment_container {
+    min-height: 43vh;
+    margin: 1em 0em;
+    display: grid;
+    grid-template-columns: auto;
+    border: 1px solid #eee;
+}
+
+.first_container,
+.second_container {
+    display: flex;
+    align-items: center;
+}
+
+.user_details_container{
+    margin-right: 10em;
+}
+
+.user_details_container, 
+.buttons_container {
+    margin-left: auto;
+}
+
+.date_square {
+    min-width: 12vw;
+    height: 18vh;
+    margin: 1em;
+    background: white;
+    border: 1px solid #eee;
+    display: grid;
+    place-items: center;
+    font-size: 3vw;
+}
+
+.appointment_details {
+    margin-left: 1em;
+    margin-bottom: 1em;
+}
+
+
+.top_header {
+    display: flex;
+    width: 92vw;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.print_btn {
+    width: 9vw;
+    height: 7vh;
+    display: grid;
+    background: #1BA1E2;
+    border: 1px solid #eee;
+    place-items: center;
+    cursor: pointer;
+}
+
+.print_btn:hover {
+    background: white;
+    color: #1BA1E2;
+}
+
+.exit_btn {
+    width: 9vw;
+    height: 7vh;
+    display: grid;
+    background: red;
+    border: 1px solid #eee;
+    place-items: center;
+    cursor: pointer;
+    margin-left: 1em;
+}
+
+.appointment_details_container {
+    margin-top: 1em;
+}
+
+.exit_btn:hover {
+    background: white;
+    color: red;
+}
+
+.plus_btn_add {
+    padding: .3em 1em;
+    background: #1BA1E2;
+    cursor: pointer;
+    margin-left: auto;
+    width: 30vw;
+    margin: 1em auto;
+    text-align:center;
+    border: 1px solid #eee;
+}
+
+.plus_btn_add:hover{
+    background: #fff;
+    color: #1BA1E2;
+}
+
+.buttons_container {
+    display: flex;
+    margin-right: 3em;
+}
+
+.action_btn {
+    margin: 0em .5em;
+    padding: .5em;
+    width: 9vw;
+    text-align: center;
+}
+
+.update_btn{
+    border: 1px solid #eee
+}
+
+.delete_btn {
+    background: orange;
+    cursor:pointer;
+}
+
+
+@media (max-width: 600px){
+    .appointment_container {
+        height: 21vh;
+    }
+    .appointment_display_container_inner {
+        min-height: 25vh;
+    }
+    .appointment_details_container h2 {
+        font-size: 2.8vw;
+    }
+    .date_square {
+        width: 19vw;
+        height: 8vh;
+    }
+    .action_btn{
+        width: 14vw;
+    }
+    .top_header h2 {
+        font-size: 2.5vw;
+    }
+    .print_btn{
+        width: 16vw;
+        height: 4vh;
+    }
+    .plus_btn_add {
+        width: 35vw;
+    }
+}
