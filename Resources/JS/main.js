@@ -519,8 +519,8 @@ const adminInit = () => {
 const dealWithTabs = () => {
     const tabs = [...document.querySelectorAll('.options_container h1')]
     tabs.map(tab => $(tab).click(e => {
-        if(e.target.innerHTML === "Clinic") window.location = "AdminClinicHome.html"
-        else if(e.target.innerHTML === "Appointments") window.location = "AdminHome.html"
+        if(e.target.innerHTML === "Clinic") window.location = "adminshophome.html"
+        else if(e.target.innerHTML === "Appointments") window.location = "adminhome.html"
         tabs.filter(tab => tab != e.target).map(tab => tab.style.background = "")
         e.target.style.background = "#fff"
     }))
