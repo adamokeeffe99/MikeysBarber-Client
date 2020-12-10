@@ -993,7 +993,7 @@ const roundMinutes = (time_now) => {
     const ms = roundUpTo5Minutes(time_now)
     return `${new Date(ms).getHours()}:${new Date(ms).getMinutes()}`
 }
-const isValidLogin = details => details.Username === "aocbooking" && details.Password === "letsgo"
+const isValidLogin = details => details.Username === "mikey1234" && details.Password === "barbershop1"
 
 // Initialization Methods
 
