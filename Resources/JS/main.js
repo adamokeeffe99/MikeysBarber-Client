@@ -1033,7 +1033,7 @@ $(document).ready(async() => {
             adminLogout()
             break   
         case window.location.pathname.toLowerCase().includes("adminshophome"):
-            adminClinicHomeInit()
+            adminshophomeInit()
             adminLogout() 
             break 
         case window.location.pathname.toLowerCase().includes("adminclinicadd"):
