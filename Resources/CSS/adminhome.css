@@ -1,0 +1,171 @@
+.main_container {
+    display: grid;
+    grid-template-areas:
+        'sideBar topPart topPart topPart topPart'
+        'sideBar filterPart filterPart filterPart filterPart'
+        'sideBar mainContainer mainContainer mainContainer mainContainer'
+        'sideBar mainContainer mainContainer mainContainer mainContainer';
+    grid-template-columns: 20% 20% 20% 20% 20%;
+    min-height: 100vh;
+    position: relative;
+}
+
+.top_part {
+    grid-area: topPart;
+    min-height: 12vh;
+    position: relative;
+}
+
+aside {
+    grid-area: sideBar;
+    background: orange;
+    display: grid;
+    position: fixed;
+    height: 100vh;
+    width: 20vw;
+    place-items: center;
+}
+
+.options_container {
+    width: 100%;
+}
+
+.options_container h1 {
+    width: 100%;
+    padding: .5em 0em;
+    text-align: center;
+    cursor:pointer;
+}
+
+.options_container h1:hover {
+    background: white;
+}
+
+.filter_container {
+    grid-area: filterPart;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-around;
+    min-height: 30vh;
+}
+
+.numberOfUsers {
+    display: flex;
+    font-size: 1.7vw;
+}
+
+.button_options {
+    display: flex;
+    width: 17vw;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.main_container_m {
+    grid-area: mainContainer;
+    position: relative;
+}
+
+
+.logout {
+    cursor: pointer;
+    font-size: 1.8vw;
+}
+
+.top_part_inner {
+    display: flex;
+    justify-content: space-between;
+    margin: 1em 1em;
+    align-items: center;
+}
+
+.top_part_inner img {
+    width: 13vw;
+}
+
+.search_container {
+    display: flex;
+    justify-content: center;
+}
+
+#search_input {
+    width: 36vw;
+    margin-right: 1em;
+}
+
+.headings{
+    display: grid;
+    grid-template-columns: repeat(5, 1fr) 7%;
+    /* grid-template-columns: repeat(6, 1fr) 7%; */
+    margin-bottom: 1em;
+    padding-bottom: .2em;
+    border-bottom: 1px solid #eee;
+}
+
+.appointment_details {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr) 7%;
+    /* grid-template-columns: repeat(6, 1fr) 7%; */
+    grid-row-gap: .2em;
+    margin-bottom: 1em;
+    padding-bottom: 1em;
+    border-bottom: 1px solid #eee;
+}
+
+.appointment_details.span{
+    grid-template-rows: repeat(2, 1fr);
+}
+
+.appointment_details h4 , 
+.appointment_details h3, 
+.headings h4{
+    font-size: 1vw;
+}
+.id{
+    font-size: .8vw; 
+}
+
+.container_sm {
+    padding: 1em;
+    display: flex;
+    height: 5vh;
+    align-items: center;
+    justify-content: center;
+}
+.time {
+    grid-row: span 2;
+    display: flex;
+    place-items: center;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.download_csv_btn, 
+.print_btn {
+    cursor: pointer;
+}
+
+.download_csv_btn {
+    padding: 0.3em 1em;
+    background: orange;
+    font-size: 1vw;
+}
+.print_btn {
+    padding: 0.3em 1em;
+    font-size: 1vw;
+    border: 1px solid #eee;
+}
+
+.delete {
+    width: 3vw;
+    height: 5vh;
+    background: red;
+    display: grid;
+    place-items: center;
+    cursor: pointer
+}
+
+.numberOfAppointments {
+    font-size: 1.5vw;
+}
