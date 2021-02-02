@@ -1,5 +1,3 @@
-
-
 const adminLogin = () => {
     const loginForm = document.querySelector('.login_form')
     $(loginForm).submit(e => {
