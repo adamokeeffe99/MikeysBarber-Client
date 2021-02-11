@@ -38,8 +38,7 @@ const getData = async() => {
                     </div>
                 </div>
                 <div class="buttons_container">
-                    <a class="update_btn action_btn" href="edit.html?
-                    id=${appt._id}&userId=${userDetails._id}">Edit</a>
+                <a class="update_btn action_btn" href="edit.html?id=${appt._id}&userId=${userDetails._id}">Edit</a>
                     <div class="delete_btn action_btn" data-appt="${appt._id}">Cancel</div>
                 </div>
             </div>
@@ -128,4 +127,126 @@ const fillinModalDetails = appointment_made_details => {
     <a class="cancelApptBtn">Cancel</a>
     </div>
     </div>`
+
+}
+
+const makeRequest = () => {
+    return axios.post(`${url}api/v1/appointments`, appointment_Details)
+}
+
+const getFormData = form => {
+    let formData = newFormData(form)
+    return formData
+}
+
+const dealWithMonths = (place, clinciData, clinicDataSingle) => {
+    const months = [...document.querySelectorAll('.month')];
+    months.map(month => {
+        $(month).click(e => {
+
+            // Get Month Selected Information, adds it to the appointment details
+            let monthSelected = clickMonth(months , e.target);
+            appointment_Details["Months"] = monthSelected.Name
+
+            //Display Calendar and Days that are closed
+            let days = fillInCalendar(monthSelected.Number, monthSelected, monthSelected.NumOfDays, monthSelected.WeekDayNameOfFirstDay, monthSelected.Name )
+            if (monthSelected.Name === nameOfMonth(new Date().getMonth())) {
+                displayDaysIrrelevant(days, new Date().getDate())
+            } else {
+                displayDaysIrrelevant(days)
+            }
+
+            if(place === "Clinic") {
+                addClinicDays(days)
+                checkSlots(clinicData)
+                if(clinicDateSingle !== undefined ) getEditingSlot(clinicDataSingle)
+            }
+
+            else dealWithDays(days)
+        })
+    })
+}
+
+const clickMonth = (months, target) => {
+    // Styles the month selected and ones that arent accordinly
+    months.filter(month => month !== target).map(month => {
+        month.style.background = "aliciablue"
+        month.style.color = "black"
+    })
+    target.style.background = "green"
+    target.style.color = "fff"
+
+    // Get month Selected Information and returns Information
+    let monthSelected = getMonthSelected(target.dataset.month)
+    return monthSelected 
+}
+
+const dealWithDays = days => {
+    days.map(day => {
+        $(day).click(e => {
+
+            //Get Day Selector Information and adds it to appointment details
+            let daySelected = clickDay(days, e.target)
+            appointment_Details["DayName"] = daySelected.day 
+            appointment_Details["DayDate"] = daySelected.Date
+
+            // Dealing with the times
+            dealWithTimes()
+    })
+
+})
+}
+
+
+const clickDay = (days, target) => {
+
+    //Style the month selected and ones that aren't accordingly
+    days.filter(day => day !== target && day.dataset.day !== "Sunday").map(day =>{
+        $(day).css('background', 'aliceblue')
+        $(day).css('color', 'black')
+    })
+    target.style.background = "green"
+    target.style.color = "white"
+
+    // Get day selected Information and returns Information
+    let daySelected = getDaySelected(target)
+    return daySelected 
+}
+
+const dealWithTimes = () => {
+
+    //** Get current time, round it to the nearest 10, make time slot and return the timeslot Containers
+    
+    // let time_now = new Date(),
+    // newRoundedTime = roundMinutes(time_now),
+
+    let timeSlots = makeTimeslots(moment().startOf('day').add(9,'h'), [] , 10)
+
+    timeSlotContainers = displayTimeslots(timeSlots);
+    timeSlotContainers.map(timeSlot => {
+        $(timeSlot).click(e => {
+
+            // Get the time selected information and add it to the appointment details
+            let timeSelected = clickTime(timeSlotContainers, e.target)
+            checkTime(new Date().getHours(), timeSlotContainers)
+            checkAgainstAppointments()
+            appointment_Details["Time"] = timeSelected
+        })
+    })
+
+
+}
+
+const clickTime = (timeSlotContainers , target) => {
+    // Style the time selected and ones that arent accordingly
+    timeSlotContainers.filter(timeSlot => timeSlot !== target && !timeSlot.classList.contains('disabled')).map(timeSlot => {
+        timeSlot.style.background = "aliciablue"
+        timeSlot.style.color = "black"
+    })
+    target.style.background = "green"
+    target.style.color = "white"
+
+    // Get time selected information and returns information
+    let timeSelected = target.innerHTML
+    return timeSelected
 }
