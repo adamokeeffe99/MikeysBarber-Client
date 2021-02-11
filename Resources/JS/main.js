@@ -114,32 +114,18 @@ const cancelModal = modal => {
 } )
 }
 
-function adminLogin() {
-    const loginForm = document.querySelector('.login_form')
-    $(loginForm).submit(e => {
-        let loginDetails = {
-            Username: $('#username_input').val(),
-            Password: $('#password_input').val()
-        }
-        e.preventDefault()
-        if (!isValidLogin(loginDetails)) {
-            alert("Your username or password is invalid")
-            return
-        }
-        sessionStorage.setItem("Admin", "LoggedIn")
-        window.location = "adminhome.html"
-    })
+const fillinModalDetails = appointment_made_details => {
+    return `<div class="appointment_made_modal_content">
+    <h2>Hi ${appointment_made_details.firstName} ${appointment_made_deatils.Surname},</h2>
+    <h4>You requested an appointetment for</h4>
+    <div class="date_time_container">
+    <h3><strong>Date :</strong> ${appointment_made_details.DayName} ${appointment_made_details.DayDate} ${appointment_made_details.Month} </h3>
+    
+    <h3><strong>Time :</strong> ${appointment_made_details.Time}</h3>
+    </div>
+    <div class="btns_container">
+    <a class="see_all_appointments_btn">Confirm</a>
+    <a class="cancelApptBtn">Cancel</a>
+    </div>
+    </div>`
 }
-
-const adminLogout = () => {
-    const logout_btn = document.querySelector('.logout')
-    $(logout_btn).click(()=> {
-        sessionStorage.removeItem("Admin");
-        window.location = "adminlogin.html"
-    })
-}
-
-
-const isValidLogin = details => details.Username === "mikey1234" && details.Password === "barbershop1"
-}
-    )
