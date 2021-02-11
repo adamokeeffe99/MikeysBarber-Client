@@ -250,3 +250,53 @@ const clickTime = (timeSlotContainers , target) => {
     let timeSelected = target.innerHTML
     return timeSelected
 }
+
+const getMonthSelected = monthNo => {
+    let monthSelected = {
+        "LastDayNum": getLastDayNum(new Date().getFullYear(), Number(monthno)),
+        "WeekdayNumOfFirstDay": getWeekDayNum(new Date().getFullYear(), Number(monthNo), 1),
+        "WeekDayNameOfFirstDay": nameOfDay(getWeekDayNum(new Date().getFullYear(), Number(monthNo), 1)),
+        "NumOfDays": getNumOfDays(1, getLastDayNum(new Date().getFullYear(), Number(monthNo))),
+        "Name": nameOfMonth(Number(monthNo)),
+        "Number": monthNo
+    }
+    return monthSelected
+}
+
+const getDaySelected = target => {
+    let daySelected = {
+        "date": target.innerHTML,
+        "day": target.dataset.day
+    }
+    return daySelected
+}
+
+const makeTimeslots = (startTime, timeSlots , interval) => {
+    let completed = falsetimeSlots.push(`${startTime.hours()}:${startTime.minutes()}`)
+    if(!completed){
+        if(startTime.hours() === 18 && startTime.minutes() === 0){
+            completed = true
+            return [...timeSlots]
+        } else {
+            if (Array.isArray(makeTimeslots(startTime.add(interval, 'm'), timeSlots, interval)))
+            return timeSlots
+            timeSlots.push(makeTimeslots(startTime.add(interval, 'm'), timeSlots, interval))
+        }
+    }
+}
+
+const displayTimeSlots = timeSlots => {
+    document.querySelector('.time_slot_container_m').style.display = "block"
+    let timeSlotContainer = document.querySelector('.time_slot_container')
+    timeSlots = timeSlots.map(timeSlot =>
+        `<div class="timeslot" data-time="${timeSlot}">${timeSlot}</div>`
+    ).join("")
+
+    timeSlotContainer.innerHTML = timeSlots
+    let timeSlotContainers = getTimeContainers()
+    checkTime(new Date().getHours(), timeSlotContainers)
+    checkAgainstAppointments()
+    return timeSlotContainers
+        
+}
+
