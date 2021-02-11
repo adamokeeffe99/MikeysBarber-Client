@@ -300,3 +300,169 @@ const displayTimeSlots = timeSlots => {
         
 }
 
+
+const checkAgainstAppointments = () => {
+    // This just checks if the date picked is within the date slots that the clinic picks
+    // 1) If it is - filters the timeslots availability by Capacity of equal or more than the number of providers * 2
+    // 2) Else - filters the timeslots availability by Capacity of equal or more than 2
+
+    //Disable first , then enable as needs be
+    appointments_Saved
+        .map(appointment_s => {
+            document.querySelector(`.timeslot[data-time="${appointment_s.Time}"]`).classList.remove("original_bg_timeslot")
+            document.querySelector(`.timeslot[data-time="${appointment_s.Time}"]`).classList.add("disabled")
+            document.querySelector(`.timeslot[data-time="${appointment_s.Time}"]`).classList.add("orange_disabled")
+        })
+    for (clinicDataSingle of clinic_Data)
+        if (appointment_Details["Month"] == clinicDataSingle.Month) {
+            timeslotsContainers = getTimeslotContainers()
+            for (date of clinicDataSingle.Dates)
+                if (appointment_Details["DayDate"] == date) {
+                    for (hour of clinicDataSingle.Hours) {
+                        timeslotsContainers
+                            .filter(appt => appt.innerHTML == hour)
+                            .map(appointment_s => {
+                                appointment_s.classList.add("original_bg_timeslot")
+                                appointment_s.classList.remove("disabled")
+                                appointment_s.classList.remove("orange_disabled")
+                            })
+                    }
+                    appointments_Saved
+                        .filter(appointment => appointment.DayDate == date)
+                        .filter(appointment => appointment.Capacity.length >= parseInt(clinicDataSingle.Providers) * 2)
+                        .map(appointment_s => {
+                            document.querySelector(`.timeslot[data-time="${appointment_s.Time}"]`).classList.remove("original_bg_timeslot")
+                            document.querySelector(`.timeslot[data-time="${appointment_s.Time}"]`).classList.add("disabled")
+                            document.querySelector(`.timeslot[data-time="${appointment_s.Time}"]`).classList.add("full_disabled")
+                        })
+                }
+            // else {
+            //     appointments_Saved
+            //         .filter(appointment => appointment.DayDate != date)
+            //         .filter(appointment => appointment.Capacity.length >= 2)
+            //         .map(appointment_s => {
+            //             document.querySelector(`.timeslot[data-time="${appointment_s.Time}"]`).classList.remove("original_bg_timeslot")
+            //             document.querySelector(`.timeslot[data-time="${appointment_s.Time}"]`).classList.add("disabled")
+            //             document.querySelector(`.timeslot[data-time="${appointment_s.Time}"]`).classList.add("full_disabled")
+            //         })
+            // }
+        } 
+}
+
+const checkTime = (timeNow, timeSlotContainers) => {
+    // This does four checks to find the available slots for clients 
+    /**
+     * 1) Checks the date is equal to the date the user specifies 
+     * 2) Checks against the clinic hours 
+     * 3) Checks and filters the disabled timeSlots by hour 
+     * - Equal to the hour then checks the minutes and sees if minutes now are more than the time user is using the app
+     * - More than the hour 
+     * 4) This ensures that when the user logs on they should only see available slots 
+     * and not one's that are not available because of clinic hours, not available because they have passed 
+     * in minutes or hours for that matter  
+     */
+    // if(new Date().getDate()  === Number(appointment_Details["DayDate"])) {
+    //         timeSlotContainers.filter(timeSlot =>  (timeSlot.innerHTML.split(":")[0] == timeNow + 1 && timeSlot.innerHTML.split(":")[1] < new Date().getMinutes()) || timeSlot.innerHTML.split(":")[0] < timeNow + 1)
+    //         .map(timeslotContainer => {
+    //             timeslotContainer.classList.add('disabled')
+    //             timeslotContainer.style.background = "orange"
+    //             timeslotContainer.style.color = "black";
+    //         })
+    // }
+    // timeSlotContainers
+    // .filter(timeSlot =>  (timeSlot.innerHTML.split(":")[0] == timeNow + 1 && timeSlot.innerHTML.split(":")[1] < new Date().getMinutes()) || timeSlot.innerHTML.split(":")[0] < timeNow + 1)
+    // .map(timeslotContainer => {
+    //     timeslotContainer.classList.add('disabled')
+    //     timeslotContainer.style.background = "orange"
+    //     timeslotContainer.style.color = "black";
+    // })
+    timeSlotContainers
+        .map(timeslotContainer => {
+            timeslotContainer.classList.add('disabled')
+            timeslotContainer.classList.add('orange_disabled')
+        })
+    clinic_Data.map(clinic_Dets => {
+        for (date of clinic_Dets.Dates)
+            if (Number(date) === Number(appointment_Details["DayDate"])) {
+                for (hour of clinic_Dets.Hours) {
+                    timeSlotContainers.filter(timeSlot => timeSlot.innerHTML === hour)
+                        .map(timeslotContainer => {
+                            timeslotContainer.classList.remove('disabled')
+                            timeslotContainer.classList.add('original_bg_timeslot')
+                        })
+                }
+            }
+    })
+
+}
+
+const getTimeslotContainers = () => {
+    return timeslotPills = [...document.querySelectorAll('.timeslot')]
+}
+
+const displayDaysIrrelevant = (days , dayStarted) => {
+    if(dayStarted !== null) {
+        days.filter(day => day.innerHTML < dayStarted).map(day => day.classList.add('disabled'))
+    }
+    days.filter(day => day.dataset.day === "Sunday" && day.dataset.day === "Monday").map(day => {
+        day.style.background = "orange" 
+        day.classList.add('disabled')
+    })
+}
+
+const fillInCalendar = (monthSelectedNum, numberOfDays, firstDay, monthSelectedName) => {
+    document.querySelector('.calendar_container_m').style.display = "block"
+    let calendarContainer = document.querySelector('.calendar_container'),
+        daysOfWeek = `
+            <h3 class= "dayOfWeek">Monday</h3>
+            <h3 class= "dayOfWeek">Tuesday</h3>
+            <h3 class= "dayOfWeek">Wednesday</h3>
+            <h3 class= "dayOfWeek">Thursday</h3>
+            <h3 class= "dayOfWeek">Friday</h3>
+            <h3 class= "dayOfWeek">Saturday</h3>
+            <h3 class= "dayOfWeek">Sunday</h3>
+        `,
+        margin = ``;
+    if(firstDay !== "Monday")
+        margin = `<div class="margin"></div>`
+    numberOfDays = numberOfDays.map(day => {
+        let dayOfWeek = getWeekDayNum(new Date().getFullYear(), monthSelectedNum, day)
+            dayOfWeek = nameOfDay(dayOfWeek);
+        return `<div class="day" data-day= "${dayOfWeek}" data-month="${monthSelectedName}">${day}</div>`
+    }).join("")
+    calendarContainer.innerHTML= daysOfWeek + margin + numberOfDays
+    getSpan(firstDay)
+    let dayContainers = getDayContainers()
+    return dayContainers
+}
+
+const dealWithTerms = () => {
+    const terms_btn = document.querySelector('.open_terms_btn')
+    $(terms_btn).click(e => {
+        openModal()
+    })
+}
+
+const openModal = () => {
+    const modal = fillInTermsModal()
+    document.querySelector('.terms_and_c_modal').innerHTML = modal;
+    document.querySelector('.terms_and_c_modal').style.display = "block" 
+    $(window).click(e => {
+        if (e.target === document.querySelector('.terms_and_c_modal')) closeModal()
+    })  
+    //For mobile
+    $(window).on('tap' , e => {
+        if (e.target === document.querySelector('.terms_and_c_modal')) closeModal()
+    })
+}
+
+const closeModal = () => {
+    document.querySelector('.terms_and_c_modal').style.display = "none" 
+}
+
+const fillInTermsModal = () => {
+    return `<div class="terms_and_c_modal_content">
+                <h2>Terms and Conditions Apply</h2>
+                <p>I consent to receiving vaccination and I'm aware of the risks and side effects as per patient information leaflet at <a href="https://www.medicines.org.uk/emc/search?q=%22Influenza+vaccine%22">https://www.medicines.org.uk/InfluenzaVaccine</a></p>
+            </div>`
+}
