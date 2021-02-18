@@ -473,9 +473,3 @@ const fillInTermsModal = () => {
     <p>I consent to having my data stored for business reasons in line with GDPR</p>
     </div>`
 }
-
-
-
-
-
-
