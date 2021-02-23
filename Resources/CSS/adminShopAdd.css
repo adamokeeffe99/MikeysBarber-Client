@@ -1,0 +1,45 @@
+.main_container{
+    grid-template-rows: 5% 95%;
+    margin-left: 20vw;
+}
+
+.top_part{
+    min-height: 20vh;
+    margin-bottom: 1em;
+}
+
+.manipulation_buttons_container {
+    display: flex;
+    justify-content: center;
+}
+
+.addClinicSlotBtn ,
+.backSlotBtn {
+    width: 20vw;
+    height: 8vh;
+    display: grid;
+    margin: 0em 1em;
+    place-items: center;
+    background: orange;
+    cursor: pointer;
+}
+
+.backSlotBtn ,
+.addClinicSlotBtn:hover{
+    background: white;
+    border: 1px solid #eee;
+}
+
+.backSlotBtn:hover{
+    background: orange;
+    color: white;
+}
+
+.selected{
+    background: orange;
+}
+
+.daySelected {
+    background: green;
+    color: #fff ;
+}
