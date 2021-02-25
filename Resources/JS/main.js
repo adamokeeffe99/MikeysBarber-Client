@@ -1,9 +1,9 @@
 //Global Variable Declarations and Functions Defintions
-const appointment_Details = {}
+const appointment_Details = {},
 url = "https://mikeysbarber.herokuapp.com/";
-let appointments_Saved = []
-appointments_Data = []
-barberShop_Data = []
+let appointments_Saved = [],
+appointments_Data = [],
+barberShop_Data = [],
 errMessage = []
 
 const getData = async() => {
@@ -22,8 +22,8 @@ const displayUserView = async() => {
 const apptContainer = document.querySelector('.appointment_display_container_inner'),
     print_btn = document.querySelector('.print_btn')
     id = new URLSearchParams(new URL(window.location.href).search).get("id"),
-    {data: userDetails} = await axios.get('${url}api/v1/appointments/${id}'),
-    appointmentData = 
+    {data: userDetails} = await axios.get(`${url}api/v1/appointments/${id}`),
+    appointmentsData = 
     userDetails.Appointments.map(appt =>
         <div class ="appointment_container">
             <div class="first_container">
