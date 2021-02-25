@@ -473,3 +473,132 @@ const fillInTermsModal = () => {
     <p>I consent to having my data stored for business reasons in line with GDPR</p>
     </div>`
 }
+
+const adminLogin = () => {
+    const loginForm = document.querySelector('.login_form')
+    $(loginForm).submit(e => {
+        let loginDetails = {
+            Username: $('#username_input').val(),
+            Password: $('#password_input').val()
+        }
+        e.preventDefault()
+        if(!isValidLogin(loginDetails)) {
+            alert("Your username or password is invalid")
+            return
+        }
+        sessionStorage.setItem("Admin", "LoggedIn");
+        window.location = "adminhome.html"
+    })
+}
+
+const adminLogout = () => {
+    const logout_btn = document.querySelector('.logout')
+    $(logout_btn).click(()=> {
+        sessionStorage.removeItem("Admin");
+        window.location = "adminlogin.html"
+    })
+}
+
+const adminInit = () => {
+    type = "Appointments"
+    $(`.options_container h1:contains("${type}")`)[0].style.background = "#fff"
+    dealWithTabs()
+    setDateTimeLocal(document.querySelector('#date_picker_input'))
+    DealWithDateChange(document.querySelector('#date_picker_input'))
+    const SelectedDateTime = getDateTime()
+    displayData(filterSavedAppointments(appointments_Saved, SelectedDateTime))
+    dealWithSearch()
+    getAppointmentDataFromTable()
+    const print_btn = document.querySelector('.print_btn');
+    printPage(print_btn)
+}
+
+const dealWithTabs = () => {
+    const tabs = [...document.querySelectorAll('.options_container h1')]
+    tabs.map(tab => $(tab).click(e => {
+        if(e.target.innerHTML === "Barber Shop") window.location = "adminshophome.html"
+        else if(e.target.innerHTML === "Appointemnts") window.location = "adminhome.html"
+        tabs.filter(tab => tab != e.target).map(tab => tab.style.background = "")
+        e.target.style.background = "#fff"
+    }))
+}
+
+const filterSavedAppointments = (appointments , dateDetails) => {
+    return appointments.filter(appointment => parseInt(appointment.DayDate) === parseInt(dateDetails.Date) && appointment.Month === dateDetails.MonthName)
+}
+
+const getDateTime = () => {
+    const dateDetails = {
+        Year: document.querySelector('#date_picker_inner').value.split("-")[0],
+        Month: document.querySelector('#date_picker_input').value.split("-")[1],
+        MonthName: nameOfMonth(parseInt(document.querySelector('#date_picker_input').value.split("-")[1]) - 1),
+        Date: document.querySelector('#date_picker_input').value.split("-")[2].split("T")[0],
+        Time: document.querySelector('#date_picker_input').value.split("-")[2].split("T")[1]
+    }
+    return dateDetails
+}
+
+const dealWithDateChange = date_picker => {
+    $(date_picker).on('change', e => {
+        document.querySelector('.main_container_m').innerHTML = `
+        <div class="headings">
+        <h4 class="container_sm">Time(incDate)</h4>
+        <h4 class="container_sm">First Name(s)</h4>
+        <h4 class="container_sm">Surname(s)</h4>
+        <h4 class="container_sm">Mobile No.</h4>
+        <h4 class="container_sm">Email</h4>
+        </div>
+        `
+        const SelectedDateTime = getDateTime()
+        displayData(filterSavedAppointments(appointments_Saved, SelectedDateTime))
+    })
+}
+
+const setDateTimeLocal = date_picker => {
+    date_picker.value = moment().format(moment.HTML5_FMT.DATETIME_LOCAL).toString()
+}
+
+const getAppointmentDataFromTable = () => {
+    const download_btn = document.querySelector('.download_csv_btn');
+    $(download_btn).click(e => {
+        const csvData = objectToCSV(appointments_Data)
+        downloadCSV(csvData)
+    })
+}
+
+const getDetails = appointments => {
+    let details = []
+    appointments.map(appt => details.push(`"${escapeSlashAndQuotes(appt.firstName)}"`, `"${escapeSlashAndQuotes(appt.Surname)}"`, `"${escapeSlashAndQuotes(appt.Mobile_Number)}"` , `"${escapeSlashAndQuotes(appt.Email)}"`))
+        // appointments.map(appt => details.push(`"${escapeSlashAndQuotes(appt.firstName)}"`, `"${escapeSlashAndQuotes(appt.Surname)}"`, `"${escapeSlashAndQuotes(appt.Mobile_Number)}"` , `"${escapeSlashAndQuotes(appt.Email)}"`))
+        return [...details]
+}
+
+const objectToCSV = appointments_Data => {
+    const csvRows = [],
+
+    // Get the headers 
+    headers = [`"Date"`, `"Time"`, `"First Name(s)"`, `"Surname(s)"`, `"Mobile No"`, `"Email"`]
+    // headers = [`"Date"`, `"Time"`, `"First Name(s)"`, `"Surname(s)"`, `"Mobile No"`, `"Email"`]
+    csvRows.push(headers.join(","))
+
+    // Loop over the rows and get values for each of the headers
+    // form escaped comma seperated values
+
+    let values = appointments_Data.map(appointment => [`"${escapeSlashAndQuotes(appointment.DayDate)} ${escapeSlashAndQuotes(appointment.Month)}"`, `"${escapeSlashAndQuotes(appointment.Time)}"` , ...getDetails(appointment.Capacity)])
+    values.map(value => csvRows.push(value.join(",")))
+
+    return csvRows.join("\n")
+}
+
+const downloadCSV = csvData => {
+    //Make a blob file
+    const blob = new Blob([csvData], {type: 'text/csv'}),
+    blobURL = window.URL.createObjectiveURL(blob),
+    a_tag = `<a href="${blobURL}" class="blob_link" hidden download="Mikeys_Appointments.csv"></a>`;
+    document.body.insertAdjacentHTML('beforeend' , a_tag)
+    let a_tag_element = document.querySelector('.blob_link')
+
+    $('.blob_link')[0].click()
+    document.body.removeChild(a_tag_element)
+    
+}
