@@ -7,7 +7,19 @@ barberShop_Data = []
 errMessage = []
 
 const getData = async() => {
-    const apptContainer = document.querySelector('.appointment_display_container_inner'),
+    let res = await axios.get(`${url}api/v1/appointments`),
+    { data } = res
+    appointments_Saved = data
+    appointments_Data = appointments_Saved
+    barberShop_Data = await getbarberShopData()
+}
+
+const userViewInit = () => {
+    displayUserView()
+}
+
+const displayUserView = async() => {
+const apptContainer = document.querySelector('.appointment_display_container_inner'),
     print_btn = document.querySelector('.print_btn')
     id = new URLSearchParams(new URL(window.location.href).search).get("id"),
     {data: userDetails} = await axios.get('${url}api/v1/appointments/${id}'),
