@@ -48,7 +48,7 @@
 }
 
 .user_top_part img {
-    width: 20vw;
+    width: 13vw;
     margin: 0em 1.2em;
 }
 
@@ -96,8 +96,38 @@ h3{
     margin: 1.3em 0em;
 }
 
+.card_decision_container ,
+.pps_number_input_container ,
+.destination_decision_container {
+    margin: 2em 0em;
+}
 
+.card_decision_container, 
+.medical_card_container, 
+.PPS_number_container ,
+.destination_decision_container,
+.surgery_container,
+.drive_through_container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
+.card_container , 
+.decision_container{
+    margin: 0em 1em;
+    display: flex;
+}
+
+.label_radio,
+.accept_terms_checkbox_label{
+    margin-bottom: unset;
+}
+
+.pps_number_input_container,
+.car_reg_container{
+    display: none;
+}
 
 .display{
     display: block;
@@ -113,13 +143,13 @@ h3{
 }
 
 .month {
-    background: rgb(255, 255, 240);
+    background: aliceblue;
     padding: 1em;
     cursor: pointer;
 }
 
 .month:hover{
-    background: rgb(128, 0, 0) !important;
+    background: green !important;
     color: #fff !important;
 }
 
@@ -208,8 +238,8 @@ h3{
 }
 
 .timeslot {
+    
     padding: 1em;
-    /* background: aliceblue; */
     border-radius: 50px;
     cursor: pointer;
 }
