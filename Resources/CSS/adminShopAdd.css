@@ -13,7 +13,7 @@
     justify-content: center;
 }
 
-.addClinicSlotBtn ,
+.addBarberShopSlotBtn ,
 .backSlotBtn {
     width: 20vw;
     height: 8vh;
@@ -25,7 +25,7 @@
 }
 
 .backSlotBtn ,
-.addClinicSlotBtn:hover{
+.addBarberShopSlotBtn:hover{
     background: white;
     border: 1px solid #eee;
 }

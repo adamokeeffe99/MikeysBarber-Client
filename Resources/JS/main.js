@@ -3,7 +3,7 @@ const appointment_Details = {}
 url = "https://mikeysbarber.herokuapp.com/";
 let appointments_Saved = []
 appointments_Data = []
-clinic_Data = []
+BarberShop_Data = []
 errMessage = []
 
 const getData = async() => {
@@ -78,7 +78,7 @@ const getData = async() => {
         //Display Calendar and Days that are closed to appointments
         let days = fillInCalendar(monthSelected.Number, monthSelected.NumOfDays,monthSelected.WeekDayNameOfFirstDay, monthSelected.Name),
         dayStarted = new Date().getDate();
-        if (place === "Clinic")addClinicDays(days)
+        if (place === "Barber Shop")addBarberShopDays(days)
         else dealWithDays(days)
         
         displayDaysIrrelevant(days , dayStarted)
@@ -139,7 +139,7 @@ const getFormData = form => {
     return formData
 }
 
-const dealWithMonths = (place, clinciData, clinicDataSingle) => {
+const dealWithMonths = (place, clinciData, BarberShopDataSingle) => {
     const months = [...document.querySelectorAll('.month')];
     months.map(month => {
         $(month).click(e => {
@@ -156,10 +156,10 @@ const dealWithMonths = (place, clinciData, clinicDataSingle) => {
                 displayDaysIrrelevant(days)
             }
 
-            if(place === "Clinic") {
-                addClinicDays(days)
-                checkSlots(clinicData)
-                if(clinicDateSingle !== undefined ) getEditingSlot(clinicDataSingle)
+            if(place === "Barber Shop") {
+                addBarberShopDays(days)
+                checkSlots(BarberShopData)
+                if(BarberShopDateSingle !== undefined ) getEditingSlot(BarberShopDataSingle)
             }
 
             else dealWithDays(days)
@@ -313,12 +313,12 @@ const checkAgainstAppointments = () => {
         document.querySelector(`.timeslot[data-time="${appointment_s.Time}"]`).classList.add("disabled")
         document.querySelector(`.timeslot[data-time="${appointment_s.Time}"]`).classList.add("orange_disabled")
     })
-    for (clinicDataSingle of clinic_Data)
-    if (appointment_Details["Month"] == clinicDataSingle.Month) {
+    for (BarberShopDataSingle of BarberShop_Data)
+    if (appointment_Details["Month"] == BarberShopDataSingle.Month) {
         timeSlotsContainer = getTimeslotContainers()
-        for (date of clinicDataSingle.Dates)
+        for (date of BarberShopDataSingle.Dates)
         if (appointment_Details["DayDate"] == date) {
-            for (hour of clinicDataSingle.Hours) {
+            for (hour of BarberShopDataSingle.Hours) {
                 timeSlotsContainers
                 .filter(appt => appt.innerHTML == hour)
                 .map(appointment_s => {
@@ -331,7 +331,7 @@ const checkAgainstAppointments = () => {
             }
             appointments_Saved
             .filter(appointment => appointment.DayDate == date)
-            .filter(appointment => appointment.Capacity.length >= parseInt(clinicDataSingle.Providers) * 2)
+            .filter(appointment => appointment.Capacity.length >= parseInt(BarberShopDataSingle.Providers) * 2)
             .map(appointment_s => {
                 document.querySelector(`.timeslot[data-time="${appointment_s.Time}"]`).classList.remove("original_bg_timeslot")
                 document.querySelector(`.timeslot[data-time="${appointment_s.Time}"]`).classList.add("disabled")
@@ -358,12 +358,12 @@ const checkTime = (timeNow, timeSlotContainers) => {
     // This does four checks to find the available slots for clients 
     /**
      * 1) Checks the date is equal to the date the user specifies 
-     * 2) Checks against the clinic hours 
+     * 2) Checks against the Barber Shop hours 
      * 3) Checks and filters the disabled timeSlots by hour 
      * - Equal to the hour then checks the minutes and sees if minutes now are more than the time user is using the app
      * - More than the hour 
      * 4) This ensures that when the user logs on they should only see available slots 
-     * and not one's that are not available because of clinic hours, not available because they have passed 
+     * and not one's that are not available because of Barber Shop hours, not available because they have passed 
      * in minutes or hours for that matter  
      */
     // if(new Date().getDate()  === Number(appointment_Details["DayDate"])) {
@@ -386,10 +386,10 @@ const checkTime = (timeNow, timeSlotContainers) => {
         timeslotContainer.classList.add('disabled')
         timeslotContainer.classList.add('orange_disabled')
     })
-    clinic_Data.map(clinic_Dets => {
-        for (date of clinic_Dets.Dates)
+    BarberShop_Data.map(BarberShop_Dets => {
+        for (date of BarberShop_Dets.Dates)
         if (Number(date) === Number(appointment_Details["DayDate"])) {
-            for (hour of clinic_Dets.Hours) {
+            for (hour of BarberShop_Dets.Hours) {
                 timeSlotContainers.filter(timeSlot => timeSlot.innerHTML === hour)
                 .map(timeSlotContainer => {
                     timeSlotContainer.classList.remove('disabled')
