@@ -18,7 +18,7 @@
 
 aside {
     grid-area: sideBar;
-    background: black;
+    background: white;
     display: grid;
     position: fixed;
     height: 100vh;
@@ -38,7 +38,7 @@ aside {
 }
 
 .options_container h1:hover {
-    background: white;
+    background: black;
 }
 
 .filter_container {
