@@ -6,7 +6,7 @@ appointments_Data = [],
 barberShop_Data = [],
 errMessage = []
 
-const getData = async() => {
+const getData = async () => {
     let res = await axios.get(`${url}api/v1/appointments`),
     { data } = res
     appointments_Saved = data
@@ -25,7 +25,7 @@ const apptContainer = document.querySelector('.appointment_display_container_inn
     {data: userDetails} = await axios.get(`${url}api/v1/appointments/${id}`),
     appointmentsData = 
     userDetails.Appointments.map(appt =>
-        <div class ="appointment_container">
+        `<div class ="appointment_container">
             <div class="first_container">
                 <div class="data_square">
                     <h5>${appt.Month}</h5>
@@ -55,11 +55,11 @@ const apptContainer = document.querySelector('.appointment_display_container_inn
                 </div>
             </div>
         </div>
-        
+        `
 
         );
 
-        apptContainer.insertAdjacentHTML('beforeend',appointmentsData)
+        apptContainer.insertAdjacentHTML('beforeend', appointmentsData)
         $(document.querySelector('.deletebtn')).click(e => { 
             e.preventDefault();
             deleteAppointment(e.currentTarget.dataset.appt, userDetails._id, "Client")
@@ -78,22 +78,44 @@ const apptContainer = document.querySelector('.appointment_display_container_inn
         const monthToday = new Date().getMonth()
         const months = [...document.querySelectorAll('.month')]
         months.filter(month => month.dataset.month < monthToday).map(month => month.classList.add('disabled'))
-        document.querySelector(`.month[data-month="${monthToday}"]`).getElementsByClassName.background = "green"
+        document.querySelector(`.month[data-month="${monthToday}"]`).style.background = "green"
         displayPastDays(months , document.querySelector(`.month[data-month="${monthToday}"]`) , place)
     }
 
-    const displayPastDays = (months,startMonth , place) => {
+    const displayPastDays = (months, startMonth , place) => {
         // Get month Selected Info, adds it to appointment details
         let monthSelected = clickMonth(months, startMonth);
-        appointment_Details["Month"] = monthSelected.DayName
+        appointment_Details["Month"] = monthSelected.Name
 
         //Display Calendar and Days that are closed to appointments
-        let days = fillInCalendar(monthSelected.Number, monthSelected.NumOfDays,monthSelected.WeekDayNameOfFirstDay, monthSelected.Name),
+        let days = fillInCalendar(monthSelected.Number, monthSelected.NumOfDays, monthSelected.WeekDayNameOfFirstDay, monthSelected.Name),
         dayStarted = new Date().getDate();
-        if (place === "Barber Shop")addbarberShopDays(days)
+        if (place === "Barber Shop") addbarberShopDays(days)
         else dealWithDays(days)
         
-        displayDaysIrrelevant(days , dayStarted)
+        displayDaysIrrelevant(days, dayStarted)
+
+        const dealWithFormUpdate = async () => {
+            const formUpdate = document.querySelector('.form_Update'),
+                user_id = new URLSearchParams(new URL(window.location.href).search).get("userId"),
+                appointment_id = new URLSearchParams(new URL(window.location.href).search).get("id");
+            // { data: userDetails } = await axios.get(`${url}api/v1/appointments/${user_id}`);
+            $(formUpdate).submit(e => {
+                e.preventDefault()
+                let bookingDetailsValidated = validateBookingDetails()
+                if (!bookingDetailsValidated) {
+                    alert("Please pick a valid month, date and time before progressing")
+                    return
+                }
+                appointment_Details["userId"] = user_id
+                updateAppointment(appointment_id)
+            })
+        }
+        
+        }
+
+
+
 
        // Getting the form Data and filling it to Appointment Details
 
@@ -104,7 +126,7 @@ const apptContainer = document.querySelector('.appointment_display_container_inn
 
        displayAppointmentPopup(appointment_Details)
        dealWithFormSubmit()
-    }
+        
 
     const validateBookingDetails = () => {
         return appointment_Details["Month"] !== undefined && appointment_Details["DayDate"] !== undefined && appointment_Details["Time"] !== undefined
