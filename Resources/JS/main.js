@@ -1,33 +1,33 @@
-//Global Variable Declarations and Functions Defintions
+// Global Variable Declarations and Function Definitions
 const appointment_Details = {},
-url = "https://mikeysbarber.herokuapp.com/";
+    url = "https://aoc-bookings.herokuapp.com/";
 let appointments_Saved = [],
-appointments_Data = [],
-barberShop_Data = [],
-errMessage = []
+    appointments_Data = [],
+    clinic_Data = [],
+    errMessage = []
 
 const getData = async () => {
     let res = await axios.get(`${url}api/v1/appointments`),
-    { data } = res
+        { data } = res
     appointments_Saved = data
     appointments_Data = appointments_Saved
-    barberShop_Data = await getbarberShopData()
+    clinic_Data = await getClinicData()
 }
 
 const userViewInit = () => {
     displayUserView()
 }
 
-const displayUserView = async() => {
-const apptContainer = document.querySelector('.appointment_display_container_inner'),
-    print_btn = document.querySelector('.print_btn')
+const displayUserView = async () => {
+    const apptContainer = document.querySelector('.appointment_display_container_inner'),
+        print_btn = document.querySelector('.print_btn')
     id = new URLSearchParams(new URL(window.location.href).search).get("id"),
-    {data: userDetails} = await axios.get(`${url}api/v1/appointments/${id}`),
-    appointmentsData = 
-    userDetails.Appointments.map(appt =>
-        `<div class ="appointment_container">
+        { data: userDetails } = await axios.get(`${url}api/v1/appointments/${id}`),
+        appointmentsData =
+        userDetails.Appointments.map(appt =>
+            `<div class="appointment_container">
             <div class="first_container">
-                <div class="data_square">
+                <div class="date_square">
                     <h5>${appt.Month}</h5>
                     ${appt.DayDate}
                 </div>
@@ -35,8 +35,8 @@ const apptContainer = document.querySelector('.appointment_display_container_inn
                     <div class="name_container">
                         <h2>Name: ${userDetails.firstName} ${userDetails.Surname}</h2>
                     </div>
-                    <div class="Mobile_container">
-                        <h2>Mobile No: ${userDetails.mobile}</h2>
+                    <div class="dob_container">
+                        <h2>DOB: ${userDetails.DOB}</h2>
                     </div>
                 </div>
             </div>
@@ -50,245 +50,346 @@ const apptContainer = document.querySelector('.appointment_display_container_inn
                     </div>
                 </div>
                 <div class="buttons_container">
-                <a class="update_btn action_btn" href="edit.html?id=${appt._id}&userId=${userDetails._id}">Edit</a>
+                    <a class="update_btn action_btn" href="edit.html?id=${appt._id}&userId=${userDetails._id}">Edit</a>
                     <div class="delete_btn action_btn" data-appt="${appt._id}">Cancel</div>
                 </div>
             </div>
         </div>
         `
-
         );
-
-        apptContainer.insertAdjacentHTML('beforeend', appointmentsData)
-        $(document.querySelector('.deletebtn')).click(e => { 
-            e.preventDefault();
-            deleteAppointment(e.currentTarget.dataset.appt, userDetails._id, "Client")
-        })
-        printPage(print_btn)
-    }
-
-    const printPage = button => {
-        $(button).click(() => {
-            windown.print()
-        })
-    }
-
-    // Setting up the code for displaying the dates, days and times on the appointment booking page
-    const displayPastMonths = place => {
-        const monthToday = new Date().getMonth()
-        const months = [...document.querySelectorAll('.month')]
-        months.filter(month => month.dataset.month < monthToday).map(month => month.classList.add('disabled'))
-        document.querySelector(`.month[data-month="${monthToday}"]`).style.background = "green"
-        displayPastDays(months , document.querySelector(`.month[data-month="${monthToday}"]`) , place)
-    }
-
-    const displayPastDays = (months, startMonth , place) => {
-        // Get month Selected Info, adds it to appointment details
-        let monthSelected = clickMonth(months, startMonth);
-        appointment_Details["Month"] = monthSelected.Name
-
-        //Display Calendar and Days that are closed to appointments
-        let days = fillInCalendar(monthSelected.Number, monthSelected.NumOfDays, monthSelected.WeekDayNameOfFirstDay, monthSelected.Name),
-        dayStarted = new Date().getDate();
-        if (place === "Barber Shop") addbarberShopDays(days)
-        else dealWithDays(days)
-        
-        displayDaysIrrelevant(days, dayStarted)
-
-        const dealWithFormUpdate = async () => {
-            const formUpdate = document.querySelector('.form_Update'),
-                user_id = new URLSearchParams(new URL(window.location.href).search).get("userId"),
-                appointment_id = new URLSearchParams(new URL(window.location.href).search).get("id");
-            // { data: userDetails } = await axios.get(`${url}api/v1/appointments/${user_id}`);
-            $(formUpdate).submit(e => {
-                e.preventDefault()
-                let bookingDetailsValidated = validateBookingDetails()
-                if (!bookingDetailsValidated) {
-                    alert("Please pick a valid month, date and time before progressing")
-                    return
-                }
-                appointment_Details["userId"] = user_id
-                updateAppointment(appointment_id)
-            })
-        }
-        
-        }
-
-
-
-
-       // Getting the form Data and filling it to Appointment Details
-
-       appointment_Details["firstName"] = formData.get('firstName')
-       appointment_Details["Surname"] = formData.get('Surname')
-       appointment_Details["Mobile"] = formData.get('Mobile')
-       appointment_Details["Email"] = formData.get('Email')
-
-       displayAppointmentPopup(appointment_Details)
-       dealWithFormSubmit()
-        
-
-    const validateBookingDetails = () => {
-        return appointment_Details["Month"] !== undefined && appointment_Details["DayDate"] !== undefined && appointment_Details["Time"] !== undefined
+    apptContainer.insertAdjacentHTML('beforeend', appointmentsData)
+    $(document.querySelector('.delete_btn')).click(e => {
+        e.preventDefault();
+        deleteAppointment(e.currentTarget.dataset.appt, userDetails._id, "Client")
+    })
+    printPage(print_btn)
 }
+
+const printPage = button => {
+    $(button).click(() => {
+        window.print()
+    })
+}
+
+
+const displayPastMonths = place => {
+    const monthToday = new Date().getMonth()
+    const months = [...document.querySelectorAll('.month')]
+    months.filter(month => month.dataset.month < monthToday).map(month => month.classList.add('disabled'))
+    document.querySelector(`.month[data-month="${monthToday}"]`).style.background = "green"
+    displayPastDays(months, document.querySelector(`.month[data-month="${monthToday}"]`), place)
+}
+
+const displayPastDays = (months, startMonth, place) => {
+    // Get month Selected Info , adds it to appointment details
+    let monthSelected = clickMonth(months, startMonth);
+    appointment_Details["Month"] = monthSelected.Name
+
+    // Display Calendar and Days That are closed
+    let days = fillInCalendar(monthSelected.Number, monthSelected.NumOfDays, monthSelected.WeekDayNameOfFirstDay, monthSelected.Name),
+        dayStarted = new Date().getDate();
+    if (place === "Clinic") addClinicDays(days)
+    else dealWithDays(days)
+
+    displayDaysIrrelevant(days, dayStarted)
+}
+
+
+const displayPPSInput = () => {
+    $(document.querySelector('.PPS_Number')).get(0).onclick = () => {
+        document.querySelector('.pps_number_input_container').classList.add("display")
+    }
+    $(document.querySelector('.Medical_Card')).get(0).onclick = () => {
+        document.querySelector('.pps_number_input_container').classList.remove("display")
+    }
+    // $(document.querySelector('.Drive_Through')).get(0).onclick = () => {
+    //     document.querySelector('.car_reg_container').classList.add("display")
+    // }
+    // $(document.querySelector('.Surgery')).get(0).onclick = () => {
+    //     document.querySelector('.car_reg_container').classList.remove("display")
+    // }
+}
+
+const dealWithFormUpdate = async () => {
+    const formUpdate = document.querySelector('.form_Update'),
+        user_id = new URLSearchParams(new URL(window.location.href).search).get("userId"),
+        appointment_id = new URLSearchParams(new URL(window.location.href).search).get("id");
+    // { data: userDetails } = await axios.get(`${url}api/v1/appointments/${user_id}`);
+    $(formUpdate).submit(e => {
+        e.preventDefault()
+        let bookingDetailsValidated = validateBookingDetails()
+        if (!bookingDetailsValidated) {
+            alert("Please pick a valid month, date and time before progressing")
+            return
+        }
+        appointment_Details["userId"] = user_id
+        updateAppointment(appointment_id)
+    })
+}
+
+
+const dealWithFormSubmit = () => {
+    const actual_create_btn = document.querySelector('.see_all_appointments_btn');
+    let submitted = false
+    $(actual_create_btn).click(e => {
+        /**
+         * Because of await making the call stack perform same thing again
+         * This was making it send two requests and insert two records into the DB
+         * This is a fix for this, 
+         * Look for info or something that should have a value already from the first time
+         */
+        if (submitted) return
+        submitted = true
+
+        // Calls the method to perform the async function to post my data 
+        makeAppointment()
+    })
+}
+
+const updateAppointment = async (appt_id) => {
+    try {
+        const { data: Users_Appointments } = await axios.put(`${url}api/v1/appointments/${appt_id}`, appointment_Details)
+        window.location = `userView.html?id=${Users_Appointments._id}`
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+const deleteAppointment = async (id, userID, place) => {
+    try {
+        const { data: Users_Appointments } = await axios.delete(`${url}api/v1/appointments/${id}?userId=${userID}`)
+        if (place === "Client") window.location = `userView.html?id=${Users_Appointments._id}`
+        else window.location = `AdminHome.html`
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+
+const makeAppointment = async () => {
+    try {
+        const { data: Users_Appointments } = await makeRequest()
+        window.location = `userView.html?id=${Users_Appointments._id}`
+        return appointment
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+const createAppointmentBtnClick = () => {
+    const form = document.querySelector('form');
+    $(form).submit(e => {
+        e.preventDefault()
+
+        let bookingDetailsValidated = validateBookingDetails()
+        if (!bookingDetailsValidated) {
+            alert("Please pick a valid month, date and time before progressing")
+            return
+        }
+
+        // Getting the form Data and filling it to appointment_Details
+        let formData = getFormData(form)
+        if (formData.get('card_decision') === null) errMessage.push("Please fill in PPS Number or select the medical card option above")
+        // if (formData.get('card_decision') === null || formData.get('destination_decision') === null) errMessage.push("Please fill in PPS Number or select the medical card option above")
+        whichCard(formData.get('card_decision'), formData)
+        // whichDestination(formData.get('destination_decision'), formData)
+        if (errMessage.length !== 0) {
+            errMessage.filter((error, index) => errMessage.lastIndexOf(error) === index)
+                .map(error => alert(error))
+            errMessage = []
+            return
+        }
+        appointment_Details["firstName"] = formData.get('firstName')
+        appointment_Details["Email"] = formData.get('Email')
+        appointment_Details["Surname"] = formData.get('Surname')
+        appointment_Details["Mobile"] = formData.get('Mobile')
+        appointment_Details["DOB"] = formData.get('DOB')
+
+
+        displayAppointmentPopup(appointment_Details)
+        dealWithFormSubmit()
+    })
+}
+
+const validateBookingDetails = () => {
+    return appointment_Details["Month"] !== undefined && appointment_Details["DayDate"] !== undefined && appointment_Details["Time"] !== undefined
+}
+
 
 const displayAppointmentPopup = appointment_Details => {
     let modal = fillinModalDetails(appointment_Details)
     document.querySelector('.appointment_made_modal').innerHTML = modal;
     document.querySelector('.appointment_made_modal').style.display = "block"
     cancelModal(document.querySelector('.appointment_made_modal'))
-
 }
 
 const cancelModal = modal => {
     const cancel_btn = document.querySelector('.cancelApptBtn')
     $(cancel_btn).click(() => {
         modal.style.display = "none"
-} )
+    })
 }
 
 const fillinModalDetails = appointment_made_details => {
     return `<div class="appointment_made_modal_content">
-    <h2>Hi ${appointment_made_details.firstName} ${appointment_made_deatils.Surname},</h2>
-    <h4>You requested an appointetment for</h4>
-    <div class="date_time_container">
-    <h3><strong>Date :</strong> ${appointment_made_details.DayName} ${appointment_made_details.DayDate} ${appointment_made_details.Month} </h3>
-    
-    <h3><strong>Time :</strong> ${appointment_made_details.Time}</h3>
-    </div>
-    <div class="btns_container">
-    <a class="see_all_appointments_btn">Confirm</a>
-    <a class="cancelApptBtn">Cancel</a>
-    </div>
-    </div>`
-
+                <h2>Hi ${appointment_made_details.firstName} ${appointment_made_details.Surname},</h2>
+                <h4>You requested an appointment for</h4>
+                <div class="date_time_container">
+                    <h3><strong>Date :</strong> ${appointment_made_details.DayName} ${appointment_made_details.DayDate} ${appointment_made_details.Month}</h3>
+                    <h3><strong>Time :</strong> ${appointment_made_details.Time}</h3>
+                </div>
+                <div class="btns_container">
+                    <a class="see_all_appointments_btn">Confirm</a>
+                    <a class="cancelApptBtn">Cancel</a>
+                </div>
+            </div>`
 }
+
+
 
 const makeRequest = () => {
     return axios.post(`${url}api/v1/appointments`, appointment_Details)
 }
 
+const whichCard = (value, formData) => {
+    if (value === "Medical_Card") {
+        appointment_Details["Medical_Card"] = true
+        appointment_Details["PPS_Number"] = false
+    } else if (value === "PPS_Number") {
+        appointment_Details["Medical_Card"] = false
+        if (formData.get('PPS_Number_Input') && formData.get('PPS_Number_Input') !== "") appointment_Details["PPS_Number"] = formData.get('PPS_Number_Input')
+        else return errMessage.push("You did not fill in a PPS Value")
+    }
+}
+const whichDestination = (value, formData) => {
+    if (value === "Surgery") {
+        appointment_Details["Surgery"] = true
+        appointment_Details["Car_Reg"] = false
+    } else if (value === "Drive_Through") {
+        appointment_Details["Surgery"] = false
+        if (formData.get('Car_Reg_Input') && formData.get('Car_Reg_Input') !== "") appointment_Details["Car_Reg"] = formData.get('Car_Reg_Input')
+        else return errMessage.push("You did not fill in a Car Registration Value")
+    }
+}
+
 const getFormData = form => {
-    let formData = newFormData(form)
+    let formData = new FormData(form)
     return formData
 }
 
-const dealWithMonths = (place, clinciData, barberShopDataSingle) => {
+const dealWithMonths = (place, clinicData, clinicDataSingle) => {
     const months = [...document.querySelectorAll('.month')];
     months.map(month => {
         $(month).click(e => {
+            // Get month Selected Info , adds it to appointment details
+            let monthSelected = clickMonth(months, e.target);
+            appointment_Details["Month"] = monthSelected.Name
 
-            // Get Month Selected Information, adds it to the appointment details
-            let monthSelected = clickMonth(months , e.target);
-            appointment_Details["Months"] = monthSelected.Name
-
-            //Display Calendar and Days that are closed
-            let days = fillInCalendar(monthSelected.Number, monthSelected, monthSelected.NumOfDays, monthSelected.WeekDayNameOfFirstDay, monthSelected.Name )
+            // Display Calendar and Days That are closed
+            let days = fillInCalendar(monthSelected.Number, monthSelected.NumOfDays, monthSelected.WeekDayNameOfFirstDay, monthSelected.Name)
             if (monthSelected.Name === nameOfMonth(new Date().getMonth())) {
                 displayDaysIrrelevant(days, new Date().getDate())
             } else {
                 displayDaysIrrelevant(days)
             }
 
-            if(place === "Barber Shop") {
-                addnbarberShopDays(days)
-                checkSlots(barberShopData)
-                if(barberShopDateSingle !== undefined ) getEditingSlot(barberShopDataSingle)
-            }
 
+            if (place === "Clinic") {
+                addClinicDays(days)
+                checkSlots(clinicData)
+                if (clinicDataSingle !== undefined) getEditingSlot(clinicDataSingle)
+            }
             else dealWithDays(days)
+
         })
     })
+
 }
 
 const clickMonth = (months, target) => {
-    // Styles the month selected and ones that arent accordinly
+    // Styles the month selected and ones that aren't accordingly
     months.filter(month => month !== target).map(month => {
-        month.style.background = "aliciablue"
+        month.style.background = "aliceblue"
         month.style.color = "black"
     })
     target.style.background = "green"
-    target.style.color = "fff"
+    target.style.color = "#fff"
 
-    // Get month Selected Information and returns Information
+    // Get month Selected Info and returns info
     let monthSelected = getMonthSelected(target.dataset.month)
-    return monthSelected 
+    return monthSelected
 }
+
+
+
 
 const dealWithDays = days => {
     days.map(day => {
         $(day).click(e => {
-
-            //Get Day Selector Information and adds it to appointment details
+            // Get day Selected Info, adds it to appointment details
             let daySelected = clickDay(days, e.target)
-            appointment_Details["DayName"] = daySelected.day 
-            appointment_Details["DayDate"] = daySelected.Date
+            appointment_Details["DayName"] = daySelected.day
+            appointment_Details["DayDate"] = daySelected.date
 
-            // Dealing with the times
+            // Deal with times now
             dealWithTimes()
+        })
     })
-
-})
 }
 
-
 const clickDay = (days, target) => {
-
-    //Style the month selected and ones that aren't accordingly
-    days.filter(day => day !== target && day.dataset.day !== "Sunday").map(day =>{
+    // Styles the month selected and ones that aren't accordingly
+    days.filter(day => day !== target && day.dataset.day !== "Sunday").map(day => {
         $(day).css('background', 'aliceblue')
         $(day).css('color', 'black')
     })
     target.style.background = "green"
     target.style.color = "white"
 
-    // Get day selected Information and returns Information
+    // Get day Selected Info and returns info
     let daySelected = getDaySelected(target)
-    return daySelected 
+    return daySelected
 }
 
 const dealWithTimes = () => {
-
-    //** Get current time, round it to the nearest 10, make time slot and return the timeslot Containers
-    
+    /**
+     * Get time now, round it to the nearest 10 make timeslots and return the timeslot Containers
+     */
     // let time_now = new Date(),
     // newRoundedTime = roundMinutes(time_now),
-
-    let timeSlots = makeTimeslots(moment().startOf('day').add(9,'h'), [] , 10)
-
-    timeSlotContainers = displayTimeslots(timeSlots);
+    let timeSlots = makeTimeslots(moment().startOf('day').add(9, 'h'), [], 10),
+        timeSlotContainers = displayTimeslots(timeSlots);
     timeSlotContainers.map(timeSlot => {
         $(timeSlot).click(e => {
-
-            // Get the time selected information and add it to the appointment details
+            // Get time Selected Info, adds it to appointment details
             let timeSelected = clickTime(timeSlotContainers, e.target)
             checkTime(new Date().getHours(), timeSlotContainers)
             checkAgainstAppointments()
             appointment_Details["Time"] = timeSelected
         })
     })
-
-
 }
 
-const clickTime = (timeSlotContainers , target) => {
-    // Style the time selected and ones that arent accordingly
+
+const clickTime = (timeSlotContainers, target) => {
+    // Styles the time selected and ones that aren't accordingly
     timeSlotContainers.filter(timeSlot => timeSlot !== target && !timeSlot.classList.contains('disabled')).map(timeSlot => {
-        timeSlot.style.background = "aliciablue"
+        timeSlot.style.background = "aliceblue"
         timeSlot.style.color = "black"
     })
     target.style.background = "green"
     target.style.color = "white"
 
-    // Get time selected information and returns information
+    // Get time Selected Info and returns info
     let timeSelected = target.innerHTML
     return timeSelected
 }
 
+
 const getMonthSelected = monthNo => {
     let monthSelected = {
-        "LastDayNum": getLastDayNum(new Date().getFullYear(), Number(monthno)),
-        "WeekdayNumOfFirstDay": getWeekDayNum(new Date().getFullYear(), Number(monthNo), 1),
+        "LastDayNum": getLastDayNum(new Date().getFullYear(), Number(monthNo)),
+        "WeekDayNumOfFirstDay": getWeekDayNum(new Date().getFullYear(), Number(monthNo), 1),
         "WeekDayNameOfFirstDay": nameOfDay(getWeekDayNum(new Date().getFullYear(), Number(monthNo), 1)),
         "NumOfDays": getNumOfDays(1, getLastDayNum(new Date().getFullYear(), Number(monthNo))),
         "Name": nameOfMonth(Number(monthNo)),
@@ -305,76 +406,67 @@ const getDaySelected = target => {
     return daySelected
 }
 
-const makeTimeslots = (startTime, timeSlots , interval) => {
-    let completed = falsetimeSlots.push(`${startTime.hours()}:${startTime.minutes()}`)
-    if(!completed){
-        if(startTime.hours() === 18 && startTime.minutes() === 0){
+const makeTimeslots = (startTime, timeSlots, interval) => {
+    let completed = false
+    timeSlots.push(`${startTime.hours()}:${startTime.minutes()}`)
+    if (!completed) {
+        if (startTime.hours() === 19 && startTime.minutes() === 30) {
             completed = true
             return [...timeSlots]
         } else {
-            if (Array.isArray(makeTimeslots(startTime.add(interval, 'm'), timeSlots, interval)))
-            return timeSlots
+            if (Array.isArray(makeTimeslots(startTime.add(interval, 'm'), timeSlots, interval))) return timeSlots
             timeSlots.push(makeTimeslots(startTime.add(interval, 'm'), timeSlots, interval))
         }
     }
 }
 
-const displayTimeSlots = timeSlots => {
+const displayTimeslots = timeSlots => {
     document.querySelector('.time_slot_container_m').style.display = "block"
     let timeSlotContainer = document.querySelector('.time_slot_container')
     timeSlots = timeSlots.map(timeSlot =>
         `<div class="timeslot" data-time="${timeSlot}">${timeSlot}</div>`
     ).join("")
-
     timeSlotContainer.innerHTML = timeSlots
-    let timeSlotContainers = getTimeContainers()
+    let timeSlotContainers = getTimeslotContainers()
     checkTime(new Date().getHours(), timeSlotContainers)
     checkAgainstAppointments()
     return timeSlotContainers
-        
 }
 
 const checkAgainstAppointments = () => {
-
-    //This just checks if the date picked is within the date slots that Mikey has picked
-    // 1) If it is - filters the timeslots available by capacity of equal or more than the number of equal or more than of * 2
-    // 2) Else - filters the timeslots availbe by capacity of equal or more than 2
-
-    //Disable first, then enable as needs be
+    // This just checks if the date picked is within the date slots that the clinic picks
+    // 1) If it is - filters the timeslots availability by Capacity of equal or more than the number of providers * 2
+    // 2) Else - filters the timeslots availability by Capacity of equal or more than 2
     appointments_Saved
-    .map(appointment_s => {
-        document.querySelector(`.timeslot[data-time="${appointment_s.Time}"]`).classList.remove("original_bg_timeslot")
-        document.querySelector(`.timeslot[data-time="${appointment_s.Time}"]`).classList.add("disabled")
-        document.querySelector(`.timeslot[data-time="${appointment_s.Time}"]`).classList.add("orange_disabled")
-    })
-    for (barberShopDataSingle of barberShop_Data)
-    if (appointment_Details["Month"] == barberShopDataSingle.Month) {
-        timeSlotsContainer = getTimeslotContainers()
-        for (date of barberShopDataSingle.Dates)
-        if (appointment_Details["DayDate"] == date) {
-            for (hour of barberShopDataSingle.Hours) {
-                timeSlotsContainers
-                .filter(appt => appt.innerHTML == hour)
-                .map(appointment_s => {
-                    appointment_s.classList.add("original_bg_timeslot")
-                    appointment_s.classList.remove("disabled")
-                    appointment_s.classList.remove("orange_disabled")
-
-                })
-
-            }
-            appointments_Saved
-            .filter(appointment => appointment.DayDate == date)
-            .filter(appointment => appointment.Capacity.length >= parseInt(barberShopDataSingle.Providers) * 2)
-            .map(appointment_s => {
-                document.querySelector(`.timeslot[data-time="${appointment_s.Time}"]`).classList.remove("original_bg_timeslot")
-                document.querySelector(`.timeslot[data-time="${appointment_s.Time}"]`).classList.add("disabled")
-                document.querySelector(`.timeslot[data-time="${appointment_s.Time}"]`).classList.add("full_disabled")
-            })
-        }
-    }
-
-                // else {
+        .map(appointment_s => {
+            document.querySelector(`.timeslot[data-time="${appointment_s.Time}"]`).classList.remove("original_bg_timeslot")
+            document.querySelector(`.timeslot[data-time="${appointment_s.Time}"]`).classList.add("disabled")
+            document.querySelector(`.timeslot[data-time="${appointment_s.Time}"]`).classList.add("orange_disabled")
+        })
+    for (clinicDataSingle of clinic_Data)
+        if (appointment_Details["Month"] == clinicDataSingle.Month) {
+            timeslotsContainers = getTimeslotContainers()
+            for (date of clinicDataSingle.Dates)
+                if (appointment_Details["DayDate"] == date) {
+                    for (hour of clinicDataSingle.Hours) {
+                        timeslotsContainers
+                            .filter(appt => appt.innerHTML == hour)
+                            .map(appointment_s => {
+                                appointment_s.classList.add("original_bg_timeslot")
+                                appointment_s.classList.remove("disabled")
+                                appointment_s.classList.remove("orange_disabled")
+                            })
+                    }
+                    appointments_Saved
+                        .filter(appointment => appointment.DayDate == date)
+                        .filter(appointment => appointment.Capacity.length >= parseInt(clinicDataSingle.Providers) * 2)
+                        .map(appointment_s => {
+                            document.querySelector(`.timeslot[data-time="${appointment_s.Time}"]`).classList.remove("original_bg_timeslot")
+                            document.querySelector(`.timeslot[data-time="${appointment_s.Time}"]`).classList.add("disabled")
+                            document.querySelector(`.timeslot[data-time="${appointment_s.Time}"]`).classList.add("full_disabled")
+                        })
+                }
+            // else {
             //     appointments_Saved
             //         .filter(appointment => appointment.DayDate != date)
             //         .filter(appointment => appointment.Capacity.length >= 2)
@@ -384,20 +476,19 @@ const checkAgainstAppointments = () => {
             //             document.querySelector(`.timeslot[data-time="${appointment_s.Time}"]`).classList.add("full_disabled")
             //         })
             // }
-   
-    }
-
+        }
+}
 
 const checkTime = (timeNow, timeSlotContainers) => {
-    // This does four checks to find the available slots for clients 
+    // This does four checks to find the available slots for patients 
     /**
      * 1) Checks the date is equal to the date the user specifies 
-     * 2) Checks against the Barber Shop hours 
+     * 2) Checks against the clinic hours 
      * 3) Checks and filters the disabled timeSlots by hour 
      * - Equal to the hour then checks the minutes and sees if minutes now are more than the time user is using the app
      * - More than the hour 
      * 4) This ensures that when the user logs on they should only see available slots 
-     * and not one's that are not available because of Barber Shop hours, not available because they have passed 
+     * and not one's that are not available because of clinic hours, not available because they have passed 
      * in minutes or hours for that matter  
      */
     // if(new Date().getDate()  === Number(appointment_Details["DayDate"])) {
@@ -416,35 +507,36 @@ const checkTime = (timeNow, timeSlotContainers) => {
     //     timeslotContainer.style.color = "black";
     // })
     timeSlotContainers
-    .map(timeslotContainer => {
-        timeslotContainer.classList.add('disabled')
-        timeslotContainer.classList.add('orange_disabled')
-    })
-    barberShop_Data.map(barberShop_Dets => {
-        for (date of barberShop_Dets.Dates)
-        if (Number(date) === Number(appointment_Details["DayDate"])) {
-            for (hour of barberShop_Dets.Hours) {
-                timeSlotContainers.filter(timeSlot => timeSlot.innerHTML === hour)
-                .map(timeSlotContainer => {
-                    timeSlotContainer.classList.remove('disabled')
-                    timeSlotContainer.classList.add('original_bg_timeslot')
-                })
+        .map(timeslotContainer => {
+            timeslotContainer.classList.add('disabled')
+            timeslotContainer.classList.add('orange_disabled')
+        })
+    clinic_Data.map(clinic_Dets => {
+        for (date of clinic_Dets.Dates)
+            if (Number(date) === Number(appointment_Details["DayDate"])) {
+                for (hour of clinic_Dets.Hours) {
+                    timeSlotContainers.filter(timeSlot => timeSlot.innerHTML === hour)
+                        .map(timeslotContainer => {
+                            timeslotContainer.classList.remove('disabled')
+                            timeslotContainer.classList.add('original_bg_timeslot')
+                        })
+                }
             }
-        }
     })
 
 }
 
 const getTimeslotContainers = () => {
-    return timeslotPills = [...document.querySelectorAll(`.timeslot`)]
+    return timeslotPills = [...document.querySelectorAll('.timeslot')]
 }
 
-const displayDaysIrrelevant = (days , dayStarted) => {
-    if(dayStarted !== null){
+
+const displayDaysIrrelevant = (days, dayStarted) => {
+    if (dayStarted !== null) {
         days.filter(day => day.innerHTML < dayStarted).map(day => day.classList.add('disabled'))
     }
-    days.filter(day => day.dataset.day === "Sunday" && day.dataset.day === "Monday").map(day => {
-        day.tyle.background = "orange"
+    days.filter(day => day.dataset.day === "Sunday").map(day => {
+        day.style.background = "orange"
         day.classList.add('disabled')
     })
 }
@@ -452,7 +544,7 @@ const displayDaysIrrelevant = (days , dayStarted) => {
 const fillInCalendar = (monthSelectedNum, numberOfDays, firstDay, monthSelectedName) => {
     document.querySelector('.calendar_container_m').style.display = "block"
     let calendarContainer = document.querySelector('.calendar_container'),
-    daysOfWeek = `   
+        daysOfWeek = `
             <h3 class= "dayOfWeek">Monday</h3>
             <h3 class= "dayOfWeek">Tuesday</h3>
             <h3 class= "dayOfWeek">Wednesday</h3>
@@ -462,17 +554,17 @@ const fillInCalendar = (monthSelectedNum, numberOfDays, firstDay, monthSelectedN
             <h3 class= "dayOfWeek">Sunday</h3>
         `,
         margin = ``;
-        if(firstDay !== "Monday")
+    if (firstDay !== "Monday")
         margin = `<div class="margin"></div>`
-        numberOfDays = numberOfDays.map(day => {
-            let dayOfWeek = getWeekDayNum(new Date().getFullYear(), monthSelectedNum, day)
-            dayOfWeek = nameOfDay(dayOfWeek);
-            return`<div class="day" data-day= "${dayOfWeek}" data-month="${monthSelectedName}">${day}</div>`
-        }).join("")
-        calendarContainer.innerHTML = daysOfWeek + margin + numberOfDays
-        getSpan(firstDay)
-        let dayContainers = getDayContainers()
-        return dayContainers
+    numberOfDays = numberOfDays.map(day => {
+        let dayOfWeek = getWeekDayNum(new Date().getFullYear(), monthSelectedNum, day)
+        dayOfWeek = nameOfDay(dayOfWeek);
+        return `<div class="day" data-day= "${dayOfWeek}" data-month="${monthSelectedName}">${day}</div>`
+    }).join("")
+    calendarContainer.innerHTML = daysOfWeek + margin + numberOfDays
+    getSpan(firstDay)
+    let dayContainers = getDayContainers()
+    return dayContainers
 }
 
 const dealWithTerms = () => {
@@ -487,13 +579,11 @@ const openModal = () => {
     document.querySelector('.terms_and_c_modal').innerHTML = modal;
     document.querySelector('.terms_and_c_modal').style.display = "block"
     $(window).click(e => {
-        if (e.target === document.querySelector('.terms_and_c_modal')) 
-        closeModal()
+        if (e.target === document.querySelector('.terms_and_c_modal')) closeModal()
     })
-    //For Mobile
-    $(window).on('tap' , e => {
-        if (e.target === document.querySelector('.terms_and_c_modal'))
-        CloseModal()
+    //For mobile
+    $(window).on('tap', e => {
+        if (e.target === document.querySelector('.terms_and_c_modal')) closeModal()
     })
 }
 
@@ -503,9 +593,9 @@ const closeModal = () => {
 
 const fillInTermsModal = () => {
     return `<div class="terms_and_c_modal_content">
-    <h2>Terms and Conditions Apply</h2>
-    <p>I consent to having my data stored for business reasons in line with GDPR</p>
-    </div>`
+                <h2>Terms and Conditions Apply</h2>
+                <p>I consent to receiving vaccination and I'm aware of the risks and side effects as per patient information leaflet at <a href="https://www.medicines.org.uk/emc/search?q=%22Influenza+vaccine%22">https://www.medicines.org.uk/InfluenzaVaccine</a></p>
+            </div>`
 }
 
 const adminLogin = () => {
@@ -516,20 +606,20 @@ const adminLogin = () => {
             Password: $('#password_input').val()
         }
         e.preventDefault()
-        if(!isValidLogin(loginDetails)) {
+        if (!isValidLogin(loginDetails)) {
             alert("Your username or password is invalid")
             return
         }
         sessionStorage.setItem("Admin", "LoggedIn");
-        window.location = "adminhome.html"
+        window.location = "adminHome.html"
     })
 }
 
 const adminLogout = () => {
     const logout_btn = document.querySelector('.logout')
-    $(logout_btn).click(()=> {
+    $(logout_btn).click(() => {
         sessionStorage.removeItem("Admin");
-        window.location = "adminlogin.html"
+        window.location = "AdminLogin.html"
     })
 }
 
@@ -538,7 +628,7 @@ const adminInit = () => {
     $(`.options_container h1:contains("${type}")`)[0].style.background = "#fff"
     dealWithTabs()
     setDateTimeLocal(document.querySelector('#date_picker_input'))
-    DealWithDateChange(document.querySelector('#date_picker_input'))
+    dealWithDateChange(document.querySelector('#date_picker_input'))
     const SelectedDateTime = getDateTime()
     displayData(filterSavedAppointments(appointments_Saved, SelectedDateTime))
     dealWithSearch()
@@ -547,23 +637,24 @@ const adminInit = () => {
     printPage(print_btn)
 }
 
+
 const dealWithTabs = () => {
     const tabs = [...document.querySelectorAll('.options_container h1')]
     tabs.map(tab => $(tab).click(e => {
-        if(e.target.innerHTML === "Barber Shop") window.location = "adminshophome.html"
-        else if(e.target.innerHTML === "Appointemnts") window.location = "adminhome.html"
+        if (e.target.innerHTML === "Clinic") window.location = "AdminClinicHome.html"
+        else if (e.target.innerHTML === "Appointments") window.location = "AdminHome.html"
         tabs.filter(tab => tab != e.target).map(tab => tab.style.background = "")
         e.target.style.background = "#fff"
     }))
 }
 
-const filterSavedAppointments = (appointments , dateDetails) => {
+const filterSavedAppointments = (appointments, dateDetails) => {
     return appointments.filter(appointment => parseInt(appointment.DayDate) === parseInt(dateDetails.Date) && appointment.Month === dateDetails.MonthName)
 }
 
 const getDateTime = () => {
     const dateDetails = {
-        Year: document.querySelector('#date_picker_inner').value.split("-")[0],
+        Year: document.querySelector('#date_picker_input').value.split("-")[0],
         Month: document.querySelector('#date_picker_input').value.split("-")[1],
         MonthName: nameOfMonth(parseInt(document.querySelector('#date_picker_input').value.split("-")[1]) - 1),
         Date: document.querySelector('#date_picker_input').value.split("-")[2].split("T")[0],
@@ -574,14 +665,15 @@ const getDateTime = () => {
 
 const dealWithDateChange = date_picker => {
     $(date_picker).on('change', e => {
+        // <h4 class="container_sm">Car Reg(s)</h4>
         document.querySelector('.main_container_m').innerHTML = `
-        <div class="headings">
-        <h4 class="container_sm">Time(incDate)</h4>
-        <h4 class="container_sm">First Name(s)</h4>
-        <h4 class="container_sm">Surname(s)</h4>
-        <h4 class="container_sm">Mobile No.</h4>
-        <h4 class="container_sm">Email</h4>
-        </div>
+                <div class="headings">
+                    <h4 class="container_sm">Time(inc.Date)</h4>
+                    <h4 class="container_sm">First Name(s)</h4>
+                    <h4 class="container_sm">Surname(s)</h4>
+                    <h4 class="container_sm">DOB(s)</h4>
+                    <h4 class="container_sm">PPS No(s)</h4>
+                </div>
         `
         const SelectedDateTime = getDateTime()
         displayData(filterSavedAppointments(appointments_Saved, SelectedDateTime))
@@ -591,6 +683,7 @@ const dealWithDateChange = date_picker => {
 const setDateTimeLocal = date_picker => {
     date_picker.value = moment().format(moment.HTML5_FMT.DATETIME_LOCAL).toString()
 }
+
 
 const getAppointmentDataFromTable = () => {
     const download_btn = document.querySelector('.download_csv_btn');
@@ -602,64 +695,63 @@ const getAppointmentDataFromTable = () => {
 
 const getDetails = appointments => {
     let details = []
-    appointments.map(appt => details.push(`"${escapeSlashAndQuotes(appt.firstName)}"`, `"${escapeSlashAndQuotes(appt.Surname)}"`, `"${escapeSlashAndQuotes(appt.Mobile_Number)}"` , `"${escapeSlashAndQuotes(appt.Email)}"`))
-        // appointments.map(appt => details.push(`"${escapeSlashAndQuotes(appt.firstName)}"`, `"${escapeSlashAndQuotes(appt.Surname)}"`, `"${escapeSlashAndQuotes(appt.Mobile_Number)}"` , `"${escapeSlashAndQuotes(appt.Email)}"`))
-        return [...details]
+    appointments.map(appt => details.push(`"${escapeSlashAndQuotes(appt.firstName)}"`, `"${escapeSlashAndQuotes(appt.Surname)}"`, `"${escapeSlashAndQuotes(appt.DOB)}"`, `"${escapeSlashAndQuotes(appt.PPS_Number)}"`))
+    // appointments.map(appt => details.push(`"${escapeSlashAndQuotes(appt.firstName)}"`, `"${escapeSlashAndQuotes(appt.Surname)}"`, `"${escapeSlashAndQuotes(appt.DOB)}"` , `"${escapeSlashAndQuotes(appt.PPS_Number)}"` , `"${escapeSlashAndQuotes(appt.Car_Reg)}"`))
+    return [...details]
 }
 
 const objectToCSV = appointments_Data => {
     const csvRows = [],
 
-    // Get the headers 
-    headers = [`"Date"`, `"Time"`, `"First Name(s)"`, `"Surname(s)"`, `"Mobile No"`, `"Email"`]
-    // headers = [`"Date"`, `"Time"`, `"First Name(s)"`, `"Surname(s)"`, `"Mobile No"`, `"Email"`]
+        // Get the headers  
+        headers = [`"Date"`, `"Time"`, `"First Name(s)"`, `"Surname(s)"`, `"DOB(s)"`, `"PPS No(s)"`]
+    // headers = [`"Date"`, `"Time"`, `"First Name(s)"`, `"Surname(s)"` , `"DOB(s)"`, `"PPS No(s)"`, `"Car Reg(s)"`]
     csvRows.push(headers.join(","))
 
-    // Loop over the rows and get values for each of the headers
-    // form escaped comma seperated values
-
-    let values = appointments_Data.map(appointment => [`"${escapeSlashAndQuotes(appointment.DayDate)} ${escapeSlashAndQuotes(appointment.Month)}"`, `"${escapeSlashAndQuotes(appointment.Time)}"` , ...getDetails(appointment.Capacity)])
+    // Loop over the rows and get values for each of the headers  
+    // form escaped comma seperated values  
+    let values = appointments_Data.map(appointment => [`"${escapeSlashAndQuotes(appointment.DayDate)} ${escapeSlashAndQuotes(appointment.Month)}"`, `"${escapeSlashAndQuotes(appointment.Time)}"`, ...getDetails(appointment.Capacity)])
     values.map(value => csvRows.push(value.join(",")))
 
     return csvRows.join("\n")
 }
 
 const downloadCSV = csvData => {
-    //Make a blob file
-    const blob = new Blob([csvData], {type: 'text/csv'}),
-    blobURL = window.URL.createObjectiveURL(blob),
-    a_tag = `<a href="${blobURL}" class="blob_link" hidden download="Mikeys_Appointments.csv"></a>`;
-    document.body.insertAdjacentHTML('beforeend' , a_tag)
+    // Make a blob file 
+    const blob = new Blob([csvData], { type: 'text/csv' }),
+        blobURL = window.URL.createObjectURL(blob),
+        a_tag = `<a href="${blobURL}" class="blob_link" hidden download="WHMC_Appointments.csv"></a>`;
+    document.body.insertAdjacentHTML('beforeend', a_tag)
     let a_tag_element = document.querySelector('.blob_link')
-
     $('.blob_link')[0].click()
     document.body.removeChild(a_tag_element)
-
 }
+
+
 // Need to keep it in the array of appointments_Saved to be passed into this func
 // Had to sort the times by their hours first of all and then their minutes in ascending order
 const displayData = appointments => {
-    const runningTotal = appointments.map(appt => appt.Capacity.length).reduce((a,b) => a+b , 0),
+    const runningTotal = appointments.map(appt => appt.Capacity.length).reduce((a, b) => a + b, 0),
         overallTotal = appointments_Saved.map(appt => appt.Capacity.length).reduce((a, b) => a + b, 0)
     appointments_Data = appointments.sort((now, next) => now.Time.split(":")[0] - next.Time.split(":")[0] || now.Time.split(":")[1] - next.Time.split(":")[1])
-    const appointmentsHTML = 
-    appointments_Data.map(appointment => {
-        if(appointment.Capacity.length >= 2) {
-            return  `  
+    const appointmentsHTML =
+        appointments_Data.map(appointment => {
+            if (appointment.Capacity.length >= 2) {
+                return `  
                 <div class="appointment_details span" data-id="${appointment._id}">
                     <h3 class="time" data-capacity="${appointment.Capacity.length}"><little>${appointment.DayDate} / ${numOfmonth(appointment.Month)}</little>${appointment.Time}</h3>
                     ${getUserDetails(appointment.Capacity, appointment._id)}
                 </div>
                 `
-        } else {
-            return  `  
+            } else {
+                return `  
                 <div class="appointment_details" data-id="${appointment._id}">
                     <h3 class="time" data-capacity="${appointment.Capacity.length}"><little>${appointment.DayDate} / ${numOfmonth(appointment.Month)}</little>${appointment.Time}</h3>
                     ${getUserDetails(appointment.Capacity, appointment._id)}
                 </div>
                 `
-        }
-    }).join("");
+            }
+        }).join("");
     document.querySelector('.main_container_m').insertAdjacentHTML('beforeend', appointmentsHTML)
     document.querySelector('.numberOfUsers').innerHTML = `Number Of Patients: ${runningTotal}`
     document.querySelector('.numberOfAppointments').innerHTML = `Overall No. Of Appointments: ${overallTotal}`
@@ -669,32 +761,32 @@ const displayData = appointments => {
 
 const checkDelete = () => {
     const delete_btns = [...document.querySelectorAll('.delete')]
-    delete_btns.map(delete_btn => 
+    delete_btns.map(delete_btn =>
         $(delete_btn).click(e => {
-            deleteAppointment(e.target.dataset.apptid , e.target.dataset.userid , "Backend")
+            deleteAppointment(e.target.dataset.apptid, e.target.dataset.userid, "Backend")
         })
-    )  
+    )
 }
 
 const checkCapacity = appointments => {
     appointments.map(appointment => {
-        if(appointment.Capacity.length >= 2){
+        if (appointment.Capacity.length >= 2) {
             $('.span').css('grid-template-rows', `repeat(${appointment.Capacity.length},1fr)`);
             [...document.querySelectorAll('.time')]
-            .map(time => $(time).css('grid-row', `span ${time.dataset.capacity}`))
+                .map(time => $(time).css('grid-row', `span ${time.dataset.capacity}`))
         }
-    })      
+    })
 }
 
 const getUserDetails = (userDetails, appID) => {
-    userDetails = userDetails.map(user => 
-    // `   <h4 class="container_sm">${user.firstName}</h4>
-    //     <h4 class="container_sm">${user.Surname}</h4> 
-    //     <h4 class="container_sm">${user.DOB}</h4>
-    //     <h4 class="container_sm">${user.PPS_Number}</h4>
-    //     <h4 class="container_sm">${user.Car_Reg}</h4>
-    //     <h4 class="delete" data-userID="${user._id}" data-apptID="${appID}">X</h4>
-    `   <h4 class="container_sm">${user.firstName}</h4>
+    userDetails = userDetails.map(user =>
+        // `   <h4 class="container_sm">${user.firstName}</h4>
+        //     <h4 class="container_sm">${user.Surname}</h4> 
+        //     <h4 class="container_sm">${user.DOB}</h4>
+        //     <h4 class="container_sm">${user.PPS_Number}</h4>
+        //     <h4 class="container_sm">${user.Car_Reg}</h4>
+        //     <h4 class="delete" data-userID="${user._id}" data-apptID="${appID}">X</h4>
+        `   <h4 class="container_sm">${user.firstName}</h4>
         <h4 class="container_sm">${user.Surname}</h4> 
         <h4 class="container_sm">${user.DOB}</h4>
         <h4 class="container_sm">${user.PPS_Number}</h4>
@@ -702,6 +794,8 @@ const getUserDetails = (userDetails, appID) => {
     `).join("")
     return userDetails
 }
+
+
 
 const dealWithSearch = () => {
     const searchInput = document.querySelector('#search_input')
@@ -717,53 +811,56 @@ const dealWithSearch = () => {
                 </div>
         `
         let filteredAppointments = checkSearchAgainst(e.target.value)
-        if(filteredAppointments.length === 0) displayData(appointments_Saved)
+        if (filteredAppointments.length === 0) displayData(appointments_Saved)
         else displayData(filteredAppointments)
     })
 }
 
 const checkSearchAgainst = searchValue => {
-return appointments_Saved.filter(appointment => appointment.Time.includes(searchValue) || loopUsers(appointment.Capacity , searchValue))
+    return appointments_Saved.filter(appointment => appointment.Time.includes(searchValue) || loopUsers(appointment.Capacity, searchValue))
 }
 
-const loopUsers = (users , searchValue) => {
-let matches = []
+const loopUsers = (users, searchValue) => {
+    let matches = []
     // users.map(user => matches.push(user._id.includes(searchValue), user.firstName.includes(searchValue), user.Surname.includes(searchValue) , user.firstName + user.Surname === searchValue, user.DOB.includes(searchValue), user.Car_Reg.includes(searchValue), user.PPS_Number.includes(searchValue)))
-    users.map(user => matches.push(user._id.includes(searchValue), user.firstName.includes(searchValue), user.Surname.includes(searchValue) , user.firstName + user.Surname === searchValue, user.DOB.includes(searchValue), user.PPS_Number.includes(searchValue)))
-    return matches.includes(true)                   
+    users.map(user => matches.push(user._id.includes(searchValue), user.firstName.includes(searchValue), user.Surname.includes(searchValue), user.firstName + user.Surname === searchValue, user.DOB.includes(searchValue), user.PPS_Number.includes(searchValue)))
+    return matches.includes(true)
 }
 
-const getbarberShopData = async() => {
-    let res = await axios.get(`${url}api/v1/BarberShop`),
-        { data: barberShopData } = res
-    return barberShopData
+const getClinicData = async () => {
+    let res = await axios.get(`${url}api/v1/clinics`),
+        { data: clinicData } = res
+    return clinicData
 }
 
-const adminshophomeInit = async() => {
-    const barberShopData = await getbarberShopData()
-    $(`.options_container h1:contains("Barber Shop")`)[0].style.background = "#fff"
+
+const adminClinicHomeInit = async () => {
+    const clinicData = await getClinicData()
+    $(`.options_container h1:contains("Clinic")`)[0].style.background = "#fff"
     dealWithTabs()
-    displayAllSlots(barberShopData)
+    displayAllSlots(clinicData)
     const delete_btns = [...document.querySelectorAll('.delete_btn')]
-    delete_btns.map(delete_btn => $(delete_btn).click(e => deletebarberShopSlot(e.target.dataset.barberShop_id))) 
+    delete_btns.map(delete_btn => $(delete_btn).click(e => deleteClinicSlot(e.target.dataset.clinic_id)))
 }
 
-const displayAllSlots = barberShopData => {
-    const slot_container = document.querySelector('.barberShop_slots_container'),
-    contents = barberShopData.map(barberShop_slot => 
-    `
+
+
+const displayAllSlots = clinicData => {
+    const slot_container = document.querySelector('.clinic_slots_container'),
+        contents = clinicData.map(clinic_slot =>
+            `
         <div class="slot_entry_container">
             <div class="date_square_container">
-                <div class="date_square">${barberShop_slot.Month.slice(0, 3)}</div>
+                <div class="date_square">${clinic_slot.Month.slice(0, 3)}</div>
             </div>
             <div class="slot_details_container">
-                <h2><strong>Hours (Not Available):</strong> ${barberShop_slot.Hours.join(", ")}</h2>
-                <h2><strong>Providers:</strong> ${barberShop_slot.Providers}</h2>
-                <h2><strong>Dates:</strong> ${barberShop_slot.Dates.join(", ")}</h2>
+                <h2><strong>Hours (Not Available):</strong> ${clinic_slot.Hours.join(", ")}</h2>
+                <h2><strong>Providers:</strong> ${clinic_slot.Providers}</h2>
+                <h2><strong>Dates:</strong> ${clinic_slot.Dates.join(", ")}</h2>
             </div>
             <div class="manipulate_slot_buttons_container">
-                <a class="update_btn action_btn" href="AdminbarberShopUpdate.html?id=${barberShop_slot._id}">Edit</a>
-                <div class="delete_btn action_btn" data-barberShop_id="${barberShop_slot._id}">Delete</div>
+                <a class="update_btn action_btn" href="AdminClinicUpdate.html?id=${clinic_slot._id}">Edit</a>
+                <div class="delete_btn action_btn" data-clinic_id="${clinic_slot._id}">Delete</div>
             </div>
         </div>
     `).join("")
@@ -774,52 +871,53 @@ const checkDateEnd = dates => {
     return dates.length === 1 ? dates[0] : dates[dates.length - 1]
 }
 
-const adminshopaddInit = async() => {
-    const barberShopData = await getbarberShopData(),
-    timeSlots = makeTimeslots(moment().startOf('day').add(9, 'h'), [], 10),
-    submit_btn = document.querySelector('.addbarberShopSlotBtn');
-    $(`.options_container h1:contains("Barber Shop")`)[0].style.background = "#fff"
+
+const adminClinicAddInit = async () => {
+    const clinicData = await getClinicData(),
+        timeSlots = makeTimeslots(moment().startOf('day').add(9, 'h'), [], 10),
+        submit_btn = document.querySelector('.addClinicSlotBtn');
+    $(`.options_container h1:contains("Clinic")`)[0].style.background = "#fff"
     dealWithTabs()
-    displayPastMonths("Barber Shop")
-    dealWithMonths("Barber Shop" , barberShopData)
-    checkSlots(barberShopData)
-    const timeSlotsContainers = displaybarberShopTimeslots(timeSlots)
-    addbarberShopTimes(timeSlotsContainers)
-    barberShopSubmitBtnClick(submit_btn , "Post")
-    // displayMonthAndDates(barberShopData)
+    displayPastMonths("Clinic")
+    dealWithMonths("Clinic", clinicData)
+    checkSlots(clinicData)
+    const timeSlotsContainers = displayClinicTimeslots(timeSlots)
+    addClinicTimes(timeSlotsContainers)
+    clinicSubmitBtnClick(submit_btn, "Post")
+    // displayMonthAndDates(clinicData)
 }
 
-const checkSlots = barberShopData => {
-    for(const barberShopSlot of barberShopData)
+const checkSlots = clinicData => {
+    for (const clinicSlot of clinicData)
         [...document.querySelectorAll('.day')]
-        .filter(day => barberShopSlot.Month === day.dataset.month)
-        .filter(day =>  barberShopSlot.Dates.includes(day.innerHTML))
+            .filter(day => clinicSlot.Month === day.dataset.month)
+            .filter(day => clinicSlot.Dates.includes(day.innerHTML))
+            .map(day => {
+                day.classList.add('disabled')
+                day.classList.add('slot_taken')
+            })
+}
+
+const getEditingSlot = clinicSingle => {
+    [...document.querySelectorAll('.day')]
+        .filter(day => clinicSingle.Month === day.dataset.month)
+        .filter(day => clinicSingle.Dates.includes(day.innerHTML))
         .map(day => {
-            day.classList.add('disabled')
-            day.classList.add('slot_taken')
+            day.classList.remove('disabled')
+            day.classList.remove('slot_taken')
+            day.classList.toggle('daySelected')
         })
 }
 
-const getEditingSlot = barberShopSingle => {
-    [...document.querySelectorAll('.day')]
-    .filter(day => barberShopSingle.Month === day.dataset.month)
-    .filter(day => barberShopSingle.Dates.includes(day.innerHTML))
-    .map(day => {
-        day.classList.remove('disabled')
-        day.classList.remove('slot_taken')
-        day.classList.toggle('daySelected')
-    })
+const getEditingTimeslot = clinicSingle => {
+    [...document.querySelectorAll('.timeslot_Clinic')]
+        .filter(slot => clinicSingle.Hours.includes(slot.innerHTML))
+        .map(slot => {
+            slot.classList.toggle('selected')
+        })
 }
 
-const getEditingTimeslot = barberShopSingle => {
-    [...document.querySelectorAll('.timeslot_barberShop')]
-    .filter(slot => barberShopSingle.Hours.includes(slot.innerHTML))
-    .map(slot => {
-        slot.classList.toggle('selected')
-    })
-}
-
-const addbarberShopTimes = timeSlots => {
+const addClinicTimes = timeSlots => {
     timeSlots.map(timeSlot => {
         $(timeSlot).click(e => {
             e.target.classList.toggle('selected')
@@ -827,91 +925,92 @@ const addbarberShopTimes = timeSlots => {
     })
 }
 
-const addbarberShopDays = days => {
+const addClinicDays = days => {
     days.map(day => {
         $(day).click(e => {
-            e.target.classList.toggle('daySelected') 
+            e.target.classList.toggle('daySelected')
         })
     })
 }
 
-const barberShopSubmitBtnClick = (submit_btn, method, id) => {
-    $(submit_btn).click(()=> {
+const clinicSubmitBtnClick = (submit_btn, method, id) => {
+    $(submit_btn).click(() => {
         let provider_value = getProvidersValue(),
-            hours_array = [...document.querySelectorAll('.timeslot_barberShop.selected')].map(timeslot => timeslot.innerHTML),
+            hours_array = [...document.querySelectorAll('.timeslot_Clinic.selected')].map(timeslot => timeslot.innerHTML),
             dates_array = [...document.querySelectorAll('.day.daySelected')].map(date => date.innerHTML);
         if (dates_array.length === 0 || hours_array.length === 0) {
             errMessage.push("You must select date(s) and hour(s)")
-        } else if(!provider_value){
+        } else if (!provider_value) {
             errMessage.push("You must indicate how many providers are needed")
         }
-        if(errMessage.length !== 0){
-            errMessage.filter((message ,index) => errMessage.lastIndexOf(message) === index).map(msg => alert(msg)) 
+        if (errMessage.length !== 0) {
+            errMessage.filter((message, index) => errMessage.lastIndexOf(message) === index).map(msg => alert(msg))
             return errMessage = []
         }
-        new_barberShop_slot = {
+        new_clinic_slot = {
             Month: appointment_Details["Month"],
             Dates: dates_array,
             Hours: hours_array,
             Providers: provider_value
-        }   
-        if(method === "Post") makebarberShopPost(new_barberShop_slot)
-        else if(method === "Update") makebarberShopUpdate(new_barberShop_slot, id)
+        }
+        if (method === "Post") makeClinicPost(new_clinic_slot)
+        else if (method === "Update") makeClinicUpdate(new_clinic_slot, id)
     })
 }
 
-const adminbarberShopEditInit = async() => {
-    const barberShopDataAll = await getbarberShopData(),
+
+const adminClinicEditInit = async () => {
+    const clinicDataAll = await getClinicData(),
         id = new URLSearchParams(new URL(window.location.href).search).get("id"),
-        barberShopDataSingle = await getbarberShopSlotSingle(id),
+        clinicDataSingle = await getClinicSlotSingle(id),
         timeSlots = makeTimeslots(moment().startOf('day').add(9, 'h'), [], 10),
-        submit_btn = document.querySelector('.addbarberShopSlotBtn');
-    $(`.options_container h1:contains("Barber Shop")`)[0].style.background = "#fff"
+        submit_btn = document.querySelector('.addClinicSlotBtn');
+    $(`.options_container h1:contains("Clinic")`)[0].style.background = "#fff"
     dealWithTabs()
-    displayPastMonths("Barber Shop")
+    displayPastMonths("Clinic")
 
-    document.querySelector(`.month[data-month="${numOfmonth(barberShopDataSingle.Month) - 1}"]`).style.background = "green"
-    displayPastDays([...document.querySelectorAll('.month')], document.querySelector(`.month[data-month="${numOfmonth(barberShopDataSingle.Month) - 1}"]`), "Barber Shop")
-    
+    document.querySelector(`.month[data-month="${numOfmonth(clinicDataSingle.Month) - 1}"]`).style.background = "green"
+    displayPastDays([...document.querySelectorAll('.month')], document.querySelector(`.month[data-month="${numOfmonth(clinicDataSingle.Month) - 1}"]`), "Clinic")
 
-    dealWithMonths("Barber Shop" , barberShopDataAll , barberShopDataSingle)
-    checkSlots(barberShopDataAll)
-    getEditingSlot(barberShopDataSingle)
-    const timeSlotsContainers = displaybarberShopTimeslots(timeSlots)
-    getEditingTimeslot(barberShopDataSingle)
-    document.querySelector('#providers_input').value = barberShopDataSingle.Providers
-    addbarberShopTimes(timeSlotsContainers)
-    barberShopSubmitBtnClick(submit_btn , "Update" , id)
+
+    dealWithMonths("Clinic", clinicDataAll, clinicDataSingle)
+    checkSlots(clinicDataAll)
+    getEditingSlot(clinicDataSingle)
+    const timeSlotsContainers = displayClinicTimeslots(timeSlots)
+    getEditingTimeslot(clinicDataSingle)
+    document.querySelector('#providers_input').value = clinicDataSingle.Providers
+    addClinicTimes(timeSlotsContainers)
+    clinicSubmitBtnClick(submit_btn, "Update", id)
 }
 
-const getbarberShopSlotSingle = async(id) => {
-    let res = await axios.get(`${url}api/v1/barberShop/${id}`),
-        { data: barberShopDataSingle } = res
-    return barberShopDataSingle
+const getClinicSlotSingle = async (id) => {
+    let res = await axios.get(`${url}api/v1/clinics/${id}`),
+        { data: clinicDataSingle } = res
+    return clinicDataSingle
 }
 
-const makebarberShopPost = async(newbarberShopSlot) => {
+const makeClinicPost = async (newClinicSlot) => {
     try {
-        await axios.post(`${url}api/v1/barberShop`, newbarberShopSlot)
-        window.location = "adminshophome.html"
+        await axios.post(`${url}api/v1/clinics`, newClinicSlot)
+        window.location = "AdminClinicHome.html"
     } catch (error) {
         console.log(error)
     }
 }
 
-const deletebarberShopSlot = async(id) => {
+const deleteClinicSlot = async (id) => {
     try {
-        await axios.delete(`${url}api/v1/barberShop/${id}`)
-        window.location = "adminshophome.html"
+        await axios.delete(`${url}api/v1/clinics/${id}`)
+        window.location = "AdminClinicHome.html"
     } catch (error) {
         console.log(error)
     }
 }
 
-const makebarberShopUpdate = async (barberShop_updated_data, id) => {
+const makeClinicUpdate = async (clinic_updated_data, id) => {
     try {
-        await axios.put(`${url}api/v1/barberShop/${id}`, barberShop_updated_data)
-        window.location = "adminshophome.html"
+        await axios.put(`${url}api/v1/clinics/${id}`, clinic_updated_data)
+        window.location = "AdminClinicHome.html"
     } catch (error) {
         console.log(error)
     }
@@ -921,25 +1020,27 @@ const getProvidersValue = () => {
     return document.querySelector('#providers_input').value !== "" ? document.querySelector('#providers_input').value : document.querySelector('#providers_input').value !== ""
 }
 
-const displaybarberShopTimeslots = timeSlots => {
-let timeSlotContainer = document.querySelector('.barberShopTimeslotsContainerInner')
-    timeSlots = timeSlots.map(timeSlot => 
-        `<div class="timeslot_barberShop" data-time="${timeSlot}">${timeSlot}</div>`
+const displayClinicTimeslots = timeSlots => {
+    let timeSlotContainer = document.querySelector('.clinicTimeslotsContainerInner')
+    timeSlots = timeSlots.map(timeSlot =>
+        `<div class="timeslot_Clinic" data-time="${timeSlot}">${timeSlot}</div>`
     ).join("")
     timeSlotContainer.innerHTML = timeSlots
-    const timeSlotContainers = [...document.querySelectorAll('.timeslot_barberShop')]
+    const timeSlotContainers = [...document.querySelectorAll('.timeslot_Clinic')]
     return timeSlotContainers
 }
 
-// const displayCurrentPickedSlots = (barberShopData, timeSlotContainers) => {
-//     for(const barberShopDataSingle of barberShopData){
-//         barberShopDataSingle.Hours.map(hour => {$(`.timeslot_barberShop:contains(${hour})`)[0].style.background = "orange"})
-//         document.querySelector('#providers_input').value = barberShopDataSingle.Providers
+// const displayCurrentPickedSlots = (clinicData, timeSlotContainers) => {
+//     for(const clinicDataSingle of clinicData){
+//         clinicDataSingle.Hours.map(hour => {$(`.timeslot_Clinic:contains(${hour})`)[0].style.background = "orange"})
+//         document.querySelector('#providers_input').value = clinicDataSingle.Providers
 //     }
 //     timeSlotContainers.map(timeslot => timeslot.classList.add('disabled'))
 //     document.querySelector('#providers_input').classList.add('disabled')
-    
+
 // }
+
+
 
 
 
@@ -947,6 +1048,7 @@ let timeSlotContainer = document.querySelector('.barberShopTimeslotsContainerInn
 const escapeSlashAndQuotes = csvValue => {
     return csvValue.replace(/"/g, '\\"')
 }
+
 
 const getLastDayNum = (year, month) => {
     return new Date(year, month + 1, 0).getDate()
@@ -961,7 +1063,7 @@ const getDayContainers = () => {
 }
 
 const nameOfMonth = month => {
-    const months = ["January" , "February" , "March" , "April" ,"May", "June", "July" , "August", "September", "October","November" , "December"]
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
     return months[month]
 }
 
@@ -977,8 +1079,8 @@ const numOfmonth = month => {
         "July": 7,
         "August": 8,
         "September": 9,
-"October": 10,
-"November": 11
+        "October": 10,
+        "November": 11
     }
     return months[month]
 }
@@ -995,6 +1097,7 @@ const nameOfDay = firstDay => {
     }
     return days[firstDay]
 }
+
 
 const getNumOfDays = (startDay, endDay) => {
     if (startDay === endDay) return [startDay];
@@ -1022,18 +1125,19 @@ const roundMinutes = (time_now) => {
     const ms = roundUpTo5Minutes(time_now)
     return `${new Date(ms).getHours()}:${new Date(ms).getMinutes()}`
 }
-const isValidLogin = details => details.Username === "mikey1234" && details.Password === "barbershop1"
+
+const isValidLogin = details => details.Username === "aocbooking" && details.Password === "letsgo"
 
 // Initialization Methods
 
-$(document).ready(async() => {
+$(document).ready(async () => {
     switch (true) {
         case window.location.pathname === "/" || window.location.pathname === "/Client/":
             getData()
             displayPastMonths()
             displayPPSInput()
             createAppointmentBtnClick()
-            dealWithMonths() 
+            dealWithMonths()
             dealWithTerms()
             break
         case window.location.pathname.includes("index"):
@@ -1041,7 +1145,7 @@ $(document).ready(async() => {
             displayPastMonths()
             displayPPSInput()
             createAppointmentBtnClick()
-            dealWithMonths()   
+            dealWithMonths()
             dealWithTerms()
             break
         case window.location.pathname.includes("userview"):
@@ -1060,19 +1164,19 @@ $(document).ready(async() => {
             await getData()
             adminInit()
             adminLogout()
-            break   
-        case window.location.pathname.toLowerCase().includes("adminshophome"):
-            adminshophomeInit()
-            adminLogout() 
-            break 
-        case window.location.pathname.toLowerCase().includes("adminSHOPadd"):
-            adminbarberShopAddInit() 
-            adminLogout() 
-            break 
-        case window.location.pathname.toLowerCase().includes("adminSHOPupdate"):
-            adminbarberShopEditInit() 
-            adminLogout() 
-            break          
-        
+            break
+        case window.location.pathname.toLowerCase().includes("adminclinichome"):
+            adminClinicHomeInit()
+            adminLogout()
+            break
+        case window.location.pathname.toLowerCase().includes("adminclinicadd"):
+            adminClinicAddInit()
+            adminLogout()
+            break
+        case window.location.pathname.toLowerCase().includes("adminclinicupdate"):
+            adminClinicEditInit()
+            adminLogout()
+            break
+
     }
 })

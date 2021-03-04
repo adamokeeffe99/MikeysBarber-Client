@@ -146,7 +146,7 @@ aside {
 }
 
 
-.barberShopTimeslotsContainerInner {
+.ClinicTimeslotsContainerInner {
     grid-template-columns: auto auto auto auto auto auto ;
     padding: 0em 1em;
     grid-gap: 1em;
@@ -154,7 +154,7 @@ aside {
     display: grid;
 } 
 
-.timeslot_barberShop {
+.timeslot_Clinic {
     border: 1px solid #eee;
     width: 11vw;
     height: 5vw;
@@ -164,7 +164,7 @@ aside {
     font-size: 1.5vw;
 }
 
-.timeslot_barberShop:hover{
+.timeslot_Clinic:hover{
     background: orange;
 }
 
@@ -172,7 +172,7 @@ aside {
     padding: 1em 0em;
 }
 
-.barberShopTimeslotsContainer h2, 
+.ClinicTimeslotsContainer h2, 
 .Providers_container h2 {
     font-size: 1.5vw;
     margin: 1em 1.2em;
