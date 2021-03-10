@@ -1169,11 +1169,11 @@ $(document).ready(async () => {
             adminshophomeInit()
             adminLogout()
             break
-        case window.location.pathname.toLowerCase().includes("adminclinicadd"):
+        case window.location.pathname.toLowerCase().includes("adminshopadd"):
             adminClinicAddInit()
             adminLogout()
             break
-        case window.location.pathname.toLowerCase().includes("adminclinicupdate"):
+        case window.location.pathname.toLowerCase().includes("adminshopupdate"):
             adminClinicEditInit()
             adminLogout()
             break
