@@ -95,21 +95,6 @@ const displayPastDays = (months, startMonth, place) => {
 }
 
 
-const displayPPSInput = () => {
-    $(document.querySelector('.PPS_Number')).get(0).onclick = () => {
-        document.querySelector('.pps_number_input_container').classList.add("display")
-    }
-    $(document.querySelector('.Medical_Card')).get(0).onclick = () => {
-        document.querySelector('.pps_number_input_container').classList.remove("display")
-    }
-    // $(document.querySelector('.Drive_Through')).get(0).onclick = () => {
-    //     document.querySelector('.car_reg_container').classList.add("display")
-    // }
-    // $(document.querySelector('.Surgery')).get(0).onclick = () => {
-    //     document.querySelector('.car_reg_container').classList.remove("display")
-    // }
-}
-
 const dealWithFormUpdate = async () => {
     const formUpdate = document.querySelector('.form_Update'),
         user_id = new URLSearchParams(new URL(window.location.href).search).get("userId"),
@@ -149,7 +134,7 @@ const dealWithFormSubmit = () => {
 const updateAppointment = async (appt_id) => {
     try {
         const { data: Users_Appointments } = await axios.put(`${url}api/v1/appointments/${appt_id}`, appointment_Details)
-        window.location = `userView.html?id=${Users_Appointments._id}`
+        window.location = `userview.html?id=${Users_Appointments._id}`
     } catch (error) {
         console.log(error)
     }
@@ -189,10 +174,6 @@ const createAppointmentBtnClick = () => {
 
         // Getting the form Data and filling it to appointment_Details
         let formData = getFormData(form)
-        if (formData.get('card_decision') === null) errMessage.push("Please fill in PPS Number or select the medical card option above")
-        // if (formData.get('card_decision') === null || formData.get('destination_decision') === null) errMessage.push("Please fill in PPS Number or select the medical card option above")
-        whichCard(formData.get('card_decision'), formData)
-        // whichDestination(formData.get('destination_decision'), formData)
         if (errMessage.length !== 0) {
             errMessage.filter((error, index) => errMessage.lastIndexOf(error) === index)
                 .map(error => alert(error))
@@ -251,26 +232,7 @@ const makeRequest = () => {
     return axios.post(`${url}api/v1/appointments`, appointment_Details)
 }
 
-const whichCard = (value, formData) => {
-    if (value === "Medical_Card") {
-        appointment_Details["Medical_Card"] = true
-        appointment_Details["PPS_Number"] = false
-    } else if (value === "PPS_Number") {
-        appointment_Details["Medical_Card"] = false
-        if (formData.get('PPS_Number_Input') && formData.get('PPS_Number_Input') !== "") appointment_Details["PPS_Number"] = formData.get('PPS_Number_Input')
-        else return errMessage.push("You did not fill in a PPS Value")
-    }
-}
-const whichDestination = (value, formData) => {
-    if (value === "Surgery") {
-        appointment_Details["Surgery"] = true
-        appointment_Details["Car_Reg"] = false
-    } else if (value === "Drive_Through") {
-        appointment_Details["Surgery"] = false
-        if (formData.get('Car_Reg_Input') && formData.get('Car_Reg_Input') !== "") appointment_Details["Car_Reg"] = formData.get('Car_Reg_Input')
-        else return errMessage.push("You did not fill in a Car Registration Value")
-    }
-}
+
 
 const getFormData = form => {
     let formData = new FormData(form)
@@ -672,7 +634,6 @@ const dealWithDateChange = date_picker => {
                     <h4 class="container_sm">First Name(s)</h4>
                     <h4 class="container_sm">Surname(s)</h4>
                     <h4 class="container_sm">DOB(s)</h4>
-                    <h4 class="container_sm">PPS No(s)</h4>
                 </div>
         `
         const SelectedDateTime = getDateTime()
@@ -695,8 +656,7 @@ const getAppointmentDataFromTable = () => {
 
 const getDetails = appointments => {
     let details = []
-    appointments.map(appt => details.push(`"${escapeSlashAndQuotes(appt.firstName)}"`, `"${escapeSlashAndQuotes(appt.Surname)}"`, `"${escapeSlashAndQuotes(appt.DOB)}"`, `"${escapeSlashAndQuotes(appt.PPS_Number)}"`))
-    // appointments.map(appt => details.push(`"${escapeSlashAndQuotes(appt.firstName)}"`, `"${escapeSlashAndQuotes(appt.Surname)}"`, `"${escapeSlashAndQuotes(appt.DOB)}"` , `"${escapeSlashAndQuotes(appt.PPS_Number)}"` , `"${escapeSlashAndQuotes(appt.Car_Reg)}"`))
+    appointments.map(appt => details.push(`"${escapeSlashAndQuotes(appt.firstName)}"`, `"${escapeSlashAndQuotes(appt.Surname)}"`, `"${escapeSlashAndQuotes(appt.DOB)}"`))
     return [...details]
 }
 
@@ -704,8 +664,7 @@ const objectToCSV = appointments_Data => {
     const csvRows = [],
 
         // Get the headers  
-        headers = [`"Date"`, `"Time"`, `"First Name(s)"`, `"Surname(s)"`, `"DOB(s)"`, `"PPS No(s)"`]
-    // headers = [`"Date"`, `"Time"`, `"First Name(s)"`, `"Surname(s)"` , `"DOB(s)"`, `"PPS No(s)"`, `"Car Reg(s)"`]
+        headers = [`"Date"`, `"Time"`, `"First Name(s)"`, `"Surname(s)"`, `"DOB(s)"`]
     csvRows.push(headers.join(","))
 
     // Loop over the rows and get values for each of the headers  
@@ -780,16 +739,9 @@ const checkCapacity = appointments => {
 
 const getUserDetails = (userDetails, appID) => {
     userDetails = userDetails.map(user =>
-        // `   <h4 class="container_sm">${user.firstName}</h4>
-        //     <h4 class="container_sm">${user.Surname}</h4> 
-        //     <h4 class="container_sm">${user.DOB}</h4>
-        //     <h4 class="container_sm">${user.PPS_Number}</h4>
-        //     <h4 class="container_sm">${user.Car_Reg}</h4>
-        //     <h4 class="delete" data-userID="${user._id}" data-apptID="${appID}">X</h4>
         `   <h4 class="container_sm">${user.firstName}</h4>
         <h4 class="container_sm">${user.Surname}</h4> 
         <h4 class="container_sm">${user.DOB}</h4>
-        <h4 class="container_sm">${user.PPS_Number}</h4>
         <h4 class="delete" data-userID="${user._id}" data-apptID="${appID}">X</h4>
     `).join("")
     return userDetails
@@ -807,7 +759,6 @@ const dealWithSearch = () => {
                     <h4 class="container_sm">First Name(s)</h4>
                     <h4 class="container_sm">Surname(s)</h4>
                     <h4 class="container_sm">DOB(s)</h4>
-                    <h4 class="container_sm">PPS No(s)</h4>
                 </div>
         `
         let filteredAppointments = checkSearchAgainst(e.target.value)
@@ -822,8 +773,7 @@ const checkSearchAgainst = searchValue => {
 
 const loopUsers = (users, searchValue) => {
     let matches = []
-    // users.map(user => matches.push(user._id.includes(searchValue), user.firstName.includes(searchValue), user.Surname.includes(searchValue) , user.firstName + user.Surname === searchValue, user.DOB.includes(searchValue), user.Car_Reg.includes(searchValue), user.PPS_Number.includes(searchValue)))
-    users.map(user => matches.push(user._id.includes(searchValue), user.firstName.includes(searchValue), user.Surname.includes(searchValue), user.firstName + user.Surname === searchValue, user.DOB.includes(searchValue), user.PPS_Number.includes(searchValue)))
+    users.map(user => matches.push(user._id.includes(searchValue), user.firstName.includes(searchValue), user.Surname.includes(searchValue), user.firstName + user.Surname === searchValue, user.DOB.includes(searchValue)))
     return matches.includes(true)
 }
 
@@ -992,7 +942,7 @@ const getbarberSlotSingle = async (id) => {
 const makebarberPost = async (newbarberSlot) => {
     try {
         await axios.post(`${url}api/v1/barbers`, newbarberSlot)
-        window.location = "Adminshophome.html"
+        window.location = "adminshophome.html"
     } catch (error) {
         console.log(error)
     }
@@ -1001,7 +951,7 @@ const makebarberPost = async (newbarberSlot) => {
 const deletebarberSlot = async (id) => {
     try {
         await axios.delete(`${url}api/v1/barbers/${id}`)
-        window.location = "Adminshophome.html"
+        window.location = "adminshophome.html"
     } catch (error) {
         console.log(error)
     }
@@ -1010,7 +960,7 @@ const deletebarberSlot = async (id) => {
 const makebarberUpdate = async (barber_updated_data, id) => {
     try {
         await axios.put(`${url}api/v1/barbers/${id}`, barber_updated_data)
-        window.location = "Adminshophome.html"
+        window.location = "adminshophome.html"
     } catch (error) {
         console.log(error)
     }
@@ -1135,7 +1085,6 @@ $(document).ready(async () => {
         case window.location.pathname === "/" || window.location.pathname === "/Client/":
             getData()
             displayPastMonths()
-            displayPPSInput()
             createAppointmentBtnClick()
             dealWithMonths()
             dealWithTerms()
@@ -1143,7 +1092,6 @@ $(document).ready(async () => {
         case window.location.pathname.includes("index"):
             getData()
             displayPastMonths()
-            displayPPSInput()
             createAppointmentBtnClick()
             dealWithMonths()
             dealWithTerms()
