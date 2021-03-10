@@ -421,7 +421,7 @@ const checkAgainstAppointments = () => {
                     }
                     appointments_Saved
                         .filter(appointment => appointment.DayDate == date)
-                        .filter(appointment => appointment.Capacity.length >= parseInt(barberDataSingle.Providers) * 2)
+                        .filter(appointment => appointment.Capacity.length >= parseInt(barberDataSingle.Providers))
                         .map(appointment_s => {
                             document.querySelector(`.timeslot[data-time="${appointment_s.Time}"]`).classList.remove("original_bg_timeslot")
                             document.querySelector(`.timeslot[data-time="${appointment_s.Time}"]`).classList.add("disabled")
