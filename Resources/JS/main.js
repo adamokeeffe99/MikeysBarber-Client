@@ -442,7 +442,7 @@ const checkAgainstAppointments = () => {
 }
 
 const checkTime = (timeNow, timeSlotContainers) => {
-    // This does four checks to find the available slots for patients 
+    // This does four checks to find the available slots for clients 
     /**
      * 1) Checks the date is equal to the date the user specifies 
      * 2) Checks against the barber hours 
@@ -712,7 +712,7 @@ const displayData = appointments => {
             }
         }).join("");
     document.querySelector('.main_container_m').insertAdjacentHTML('beforeend', appointmentsHTML)
-    document.querySelector('.numberOfUsers').innerHTML = `Number Of Patients: ${runningTotal}`
+    document.querySelector('.numberOfUsers').innerHTML = `Number Of Clients: ${runningTotal}`
     document.querySelector('.numberOfAppointments').innerHTML = `Overall No. Of Appointments: ${overallTotal}`
     checkCapacity(appointments)
     checkDelete()
@@ -741,7 +741,6 @@ const getUserDetails = (userDetails, appID) => {
     userDetails = userDetails.map(user =>
         `   <h4 class="container_sm">${user.firstName}</h4>
         <h4 class="container_sm">${user.Surname}</h4> 
-        <h4 class="container_sm">${user.DOB}</h4>
         <h4 class="delete" data-userID="${user._id}" data-apptID="${appID}">X</h4>
     `).join("")
     return userDetails
