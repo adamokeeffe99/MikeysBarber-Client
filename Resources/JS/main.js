@@ -556,7 +556,7 @@ const closeModal = () => {
 const fillInTermsModal = () => {
     return `<div class="terms_and_c_modal_content">
                 <h2>Terms and Conditions Apply</h2>
-                <p>I consent to receiving vaccination and I'm aware of the risks and side effects as per patient information leaflet at <a href="https://www.medicines.org.uk/emc/search?q=%22Influenza+vaccine%22">https://www.medicines.org.uk/InfluenzaVaccine</a></p>
+                <p>I consent to my information being stored for Barber Appointment reasons</p>
             </div>`
 }
 
