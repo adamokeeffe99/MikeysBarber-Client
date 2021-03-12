@@ -183,9 +183,7 @@ const createAppointmentBtnClick = () => {
         appointment_Details["firstName"] = formData.get('firstName')
         appointment_Details["Email"] = formData.get('Email')
         appointment_Details["Surname"] = formData.get('Surname')
-        appointment_Details["Mobile"] = formData.get('Mobile')
-        appointment_Details["DOB"] = formData.get('DOB')
-
+        
 
         displayAppointmentPopup(appointment_Details)
         dealWithFormSubmit()
