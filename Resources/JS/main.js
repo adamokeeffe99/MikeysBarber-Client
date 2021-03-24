@@ -674,7 +674,7 @@ const downloadCSV = csvData => {
     // Make a blob file 
     const blob = new Blob([csvData], { type: 'text/csv' }),
         blobURL = window.URL.createObjectURL(blob),
-        a_tag = `<a href="${blobURL}" class="blob_link" hidden download="WHMC_Appointments.csv"></a>`;
+        a_tag = `<a href="${blobURL}" class="blob_link" hidden download="Mikeys_Appointments.csv"></a>`;
     document.body.insertAdjacentHTML('beforeend', a_tag)
     let a_tag_element = document.querySelector('.blob_link')
     $('.blob_link')[0].click()
