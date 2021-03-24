@@ -35,9 +35,6 @@ const displayUserView = async () => {
                     <div class="name_container">
                         <h2>Name: ${userDetails.firstName} ${userDetails.Surname}</h2>
                     </div>
-                    <div class="dob_container">
-                        <h2>DOB: ${userDetails.DOB}</h2>
-                    </div>
                 </div>
             </div>
             <div class="second_container">
@@ -144,7 +141,7 @@ const deleteAppointment = async (id, userID, place) => {
     try {
         const { data: Users_Appointments } = await axios.delete(`${url}api/v1/appointments/${id}?userId=${userID}`)
         if (place === "Client") window.location = `userView.html?id=${Users_Appointments._id}`
-        else window.location = `AdminHome.html`
+        else window.location = `adminhome.html`
     } catch (error) {
         console.log(error)
     }
@@ -541,7 +538,8 @@ const openModal = () => {
     $(window).click(e => {
         if (e.target === document.querySelector('.terms_and_c_modal')) closeModal()
     })
-    //For mobile
+    //For use on mobile
+
     $(window).on('tap', e => {
         if (e.target === document.querySelector('.terms_and_c_modal')) closeModal()
     })
@@ -579,7 +577,7 @@ const adminLogout = () => {
     const logout_btn = document.querySelector('.logout')
     $(logout_btn).click(() => {
         sessionStorage.removeItem("Admin");
-        window.location = "AdminLogin.html"
+        window.location = "adminlogin.html"
     })
 }
 
@@ -601,8 +599,8 @@ const adminInit = () => {
 const dealWithTabs = () => {
     const tabs = [...document.querySelectorAll('.options_container h1')]
     tabs.map(tab => $(tab).click(e => {
-        if (e.target.innerHTML === "barber") window.location = "Adminshophome.html"
-        else if (e.target.innerHTML === "Appointments") window.location = "AdminHome.html"
+        if (e.target.innerHTML === "barber") window.location = "adminshophome.html"
+        else if (e.target.innerHTML === "Appointments") window.location = "adminhome.html"
         tabs.filter(tab => tab != e.target).map(tab => tab.style.background = "")
         e.target.style.background = "#fff"
     }))
@@ -631,7 +629,6 @@ const dealWithDateChange = date_picker => {
                     <h4 class="container_sm">Time(inc.Date)</h4>
                     <h4 class="container_sm">First Name(s)</h4>
                     <h4 class="container_sm">Surname(s)</h4>
-                    <h4 class="container_sm">DOB(s)</h4>
                 </div>
         `
         const SelectedDateTime = getDateTime()
@@ -654,7 +651,7 @@ const getAppointmentDataFromTable = () => {
 
 const getDetails = appointments => {
     let details = []
-    appointments.map(appt => details.push(`"${escapeSlashAndQuotes(appt.firstName)}"`, `"${escapeSlashAndQuotes(appt.Surname)}"`, `"${escapeSlashAndQuotes(appt.DOB)}"`))
+    appointments.map(appt => details.push(`"${escapeSlashAndQuotes(appt.firstName)}"`, `"${escapeSlashAndQuotes(appt.Surname)}"`))
     return [...details]
 }
 
@@ -662,7 +659,7 @@ const objectToCSV = appointments_Data => {
     const csvRows = [],
 
         // Get the headers  
-        headers = [`"Date"`, `"Time"`, `"First Name(s)"`, `"Surname(s)"`, `"DOB(s)"`]
+        headers = [`"Date"`, `"Time"`, `"First Name(s)"`, `"Surname(s)"`]
     csvRows.push(headers.join(","))
 
     // Loop over the rows and get values for each of the headers  
@@ -755,7 +752,6 @@ const dealWithSearch = () => {
                     <h4 class="container_sm">Time(inc.Date)</h4>
                     <h4 class="container_sm">First Name(s)</h4>
                     <h4 class="container_sm">Surname(s)</h4>
-                    <h4 class="container_sm">DOB(s)</h4>
                 </div>
         `
         let filteredAppointments = checkSearchAgainst(e.target.value)
@@ -770,7 +766,7 @@ const checkSearchAgainst = searchValue => {
 
 const loopUsers = (users, searchValue) => {
     let matches = []
-    users.map(user => matches.push(user._id.includes(searchValue), user.firstName.includes(searchValue), user.Surname.includes(searchValue), user.firstName + user.Surname === searchValue, user.DOB.includes(searchValue)))
+    users.map(user => matches.push(user._id.includes(searchValue), user.firstName.includes(searchValue), user.Surname.includes(searchValue), user.firstName + user.Surname === searchValue))
     return matches.includes(true)
 }
 
@@ -986,10 +982,6 @@ const displaybarberTimeslots = timeSlots => {
 //     document.querySelector('#providers_input').classList.add('disabled')
 
 // }
-
-
-
-
 
 // Helper Functions
 const escapeSlashAndQuotes = csvValue => {
