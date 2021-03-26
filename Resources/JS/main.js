@@ -6,6 +6,7 @@ let appointments_Saved = [],
     barber_Data = [],
     errMessage = []
 
+// https://stackabuse.com/making-asynchronous-http-requests-in-javascript-with-axios/ article I used to learn about the use of http requests with axios
 const getData = async () => {
     let res = await axios.get(`${url}api/v1/appointments`),
         { data } = res
@@ -569,6 +570,7 @@ const fillInTermsModal = () => {
 
 
 // Setting up Mikeys admin log in
+// This video https://www.youtube.com/watch?v=PkxA6m-NNCY&t=1s was just a basic walk through of a login in which i incoroparted along with w3Schools to make this login.
 const adminLogin = () => {
     const loginForm = document.querySelector('.login_form')
     $(loginForm).submit(e => {
