@@ -1,4 +1,4 @@
-// Global Variable Declarations and Function Definitions
+// Setting up the Global Variable Declarations and Function Definitions
 const appointment_Details = {},
     url = "https://mikeysbarber.herokuapp.com/";
 let appointments_Saved = [],
@@ -18,6 +18,8 @@ const userViewInit = () => {
     displayUserView()
 }
 
+//Displaying the appointment for the clients after they confirm their bookings
+//Allows the option to delete the appointment after making
 const displayUserView = async () => {
     const apptContainer = document.querySelector('.appointment_display_container_inner'),
         print_btn = document.querySelector('.print_btn')
@@ -62,13 +64,14 @@ const displayUserView = async () => {
     printPage(print_btn)
 }
 
+// Allows the option to print off appointment for clients
 const printPage = button => {
     $(button).click(() => {
         window.print()
     })
 }
 
-
+// Display the months of the year and todays date
 const displayPastMonths = place => {
     const monthToday = new Date().getMonth()
     const months = [...document.querySelectorAll('.month')]
@@ -91,7 +94,7 @@ const displayPastDays = (months, startMonth, place) => {
     displayDaysIrrelevant(days, dayStarted)
 }
 
-
+// If booking is incomplete error message shows
 const dealWithFormUpdate = async () => {
     const formUpdate = document.querySelector('.form_Update'),
         user_id = new URLSearchParams(new URL(window.location.href).search).get("userId"),
@@ -109,7 +112,7 @@ const dealWithFormUpdate = async () => {
     })
 }
 
-
+// Creates appointment if appointment available
 const dealWithFormSubmit = () => {
     const actual_create_btn = document.querySelector('.see_all_appointments_btn');
     let submitted = false
@@ -128,6 +131,7 @@ const dealWithFormSubmit = () => {
     })
 }
 
+// Allows the client to edit their booking if they change their mind on time or date
 const updateAppointment = async (appt_id) => {
     try {
         const { data: Users_Appointments } = await axios.put(`${url}api/v1/appointments/${appt_id}`, appointment_Details)
@@ -137,6 +141,7 @@ const updateAppointment = async (appt_id) => {
     }
 }
 
+// Allows client to delete appointment once booked and reopens appointment slot
 const deleteAppointment = async (id, userID, place) => {
     try {
         const { data: Users_Appointments } = await axios.delete(`${url}api/v1/appointments/${id}?userId=${userID}`)
@@ -147,7 +152,7 @@ const deleteAppointment = async (id, userID, place) => {
     }
 }
 
-
+// Deals with the making of appointments
 const makeAppointment = async () => {
     try {
         const { data: Users_Appointments } = await makeRequest()
@@ -158,6 +163,7 @@ const makeAppointment = async () => {
     }
 }
 
+//Deals with the appointment booking making sure it is valid and time is available 
 const createAppointmentBtnClick = () => {
     const form = document.querySelector('form');
     $(form).submit(e => {
@@ -191,7 +197,7 @@ const validateBookingDetails = () => {
     return appointment_Details["Month"] !== undefined && appointment_Details["DayDate"] !== undefined && appointment_Details["Time"] !== undefined
 }
 
-
+// Displays details of appointment for client before confirmation is complete
 const displayAppointmentPopup = appointment_Details => {
     let modal = fillinModalDetails(appointment_Details)
     document.querySelector('.appointment_made_modal').innerHTML = modal;
@@ -199,6 +205,7 @@ const displayAppointmentPopup = appointment_Details => {
     cancelModal(document.querySelector('.appointment_made_modal'))
 }
 
+// Another cancellation option before completion of booking 
 const cancelModal = modal => {
     const cancel_btn = document.querySelector('.cancelApptBtn')
     $(cancel_btn).click(() => {
@@ -206,6 +213,7 @@ const cancelModal = modal => {
     })
 }
 
+// shows details selected in appointment page
 const fillinModalDetails = appointment_made_details => {
     return `<div class="appointment_made_modal_content">
                 <h2>Hi ${appointment_made_details.firstName} ${appointment_made_details.Surname},</h2>
@@ -392,7 +400,7 @@ const displayTimeslots = timeSlots => {
 
 const checkAgainstAppointments = () => {
     // This just checks if the date picked is within the date slots that the barber picks
-    // 1) If it is - filters the timeslots availability by Capacity of equal or more than the number of providers * 2
+    // 1) If it is - filters the timeslots availability by Capacity of equal or more than the number of providers * 1 (for now as mikey is a sole barber)
     // 2) Else - filters the timeslots availability by Capacity of equal or more than 2
     appointments_Saved
         .map(appointment_s => {
@@ -483,6 +491,7 @@ const checkTime = (timeNow, timeSlotContainers) => {
 
 }
 
+// Setting up time slots
 const getTimeslotContainers = () => {
     return timeslotPills = [...document.querySelectorAll('.timeslot')]
 }
@@ -498,6 +507,7 @@ const displayDaysIrrelevant = (days, dayStarted) => {
     })
 }
 
+//Sets up the calendar for display
 const fillInCalendar = (monthSelectedNum, numberOfDays, firstDay, monthSelectedName) => {
     document.querySelector('.calendar_container_m').style.display = "block"
     let calendarContainer = document.querySelector('.calendar_container'),
@@ -524,6 +534,7 @@ const fillInCalendar = (monthSelectedNum, numberOfDays, firstDay, monthSelectedN
     return dayContainers
 }
 
+// Deals with the terms and conditions section
 const dealWithTerms = () => {
     const terms_btn = document.querySelector('.open_terms_btn')
     $(terms_btn).click(e => {
@@ -538,7 +549,7 @@ const openModal = () => {
     $(window).click(e => {
         if (e.target === document.querySelector('.terms_and_c_modal')) closeModal()
     })
-    //For use on mobile
+    //For use on mobile devices
 
     $(window).on('tap', e => {
         if (e.target === document.querySelector('.terms_and_c_modal')) closeModal()
@@ -556,6 +567,8 @@ const fillInTermsModal = () => {
             </div>`
 }
 
+
+// Setting up Mikeys admin log in
 const adminLogin = () => {
     const loginForm = document.querySelector('.login_form')
     $(loginForm).submit(e => {
@@ -573,6 +586,7 @@ const adminLogin = () => {
     })
 }
 
+//Admin log out and where it brings you to
 const adminLogout = () => {
     const logout_btn = document.querySelector('.logout')
     $(logout_btn).click(() => {
@@ -581,6 +595,7 @@ const adminLogout = () => {
     })
 }
 
+//The set up on the where the appointments will be displayed on the admin portal
 const adminInit = () => {
     type = "Appointments"
     $(`.options_container h1:contains("${type}")`)[0].style.background = "#fff"
@@ -595,7 +610,7 @@ const adminInit = () => {
     printPage(print_btn)
 }
 
-
+// This will deal with the options container on the admin page and where they will lead to
 const dealWithTabs = () => {
     const tabs = [...document.querySelectorAll('.options_container h1')]
     tabs.map(tab => $(tab).click(e => {
@@ -606,10 +621,12 @@ const dealWithTabs = () => {
     }))
 }
 
+// Displaying appointments made
 const filterSavedAppointments = (appointments, dateDetails) => {
     return appointments.filter(appointment => parseInt(appointment.DayDate) === parseInt(dateDetails.Date) && appointment.Month === dateDetails.MonthName)
 }
 
+//Displaying the time and date of appointments 
 const getDateTime = () => {
     const dateDetails = {
         Year: document.querySelector('#date_picker_input').value.split("-")[0],
@@ -621,9 +638,9 @@ const getDateTime = () => {
     return dateDetails
 }
 
+//Deals with the changing of appointment details
 const dealWithDateChange = date_picker => {
     $(date_picker).on('change', e => {
-        // <h4 class="container_sm">Car Reg(s)</h4>
         document.querySelector('.main_container_m').innerHTML = `
                 <div class="headings">
                     <h4 class="container_sm">Time(inc.Date)</h4>
@@ -640,7 +657,7 @@ const setDateTimeLocal = date_picker => {
     date_picker.value = moment().format(moment.HTML5_FMT.DATETIME_LOCAL).toString()
 }
 
-
+// Allows mikey to download his appointments as a CSV
 const getAppointmentDataFromTable = () => {
     const download_btn = document.querySelector('.download_csv_btn');
     $(download_btn).click(e => {
@@ -742,11 +759,11 @@ const getUserDetails = (userDetails, appID) => {
 }
 
 
-
+// Deals with the search bar in the appointment section where Mikey can look up clients via their name
 const dealWithSearch = () => {
     const searchInput = document.querySelector('#search_input')
     $(searchInput).on('input change', e => {
-        // <h4 class="container_sm">Car Reg(s)</h4>
+        
         document.querySelector('.main_container_m').innerHTML = `
                 <div class="headings">
                     <h4 class="container_sm">Time(inc.Date)</h4>
@@ -776,7 +793,7 @@ const getbarberData = async () => {
     return barberData
 }
 
-
+// Deals with the barber section of the admin side and displays all slots opened by the barber
 const adminshophomeInit = async () => {
     const barberData = await getbarberData()
     $(`.options_container h1:contains("barber")`)[0].style.background = "#fff"
@@ -786,7 +803,7 @@ const adminshophomeInit = async () => {
     delete_btns.map(delete_btn => $(delete_btn).click(e => deletebarberSlot(e.target.dataset.barber_id)))
 }
 
-
+// Code for displaying all the times and dates opened by the barber for appointments
 
 const displayAllSlots = barberData => {
     const slot_container = document.querySelector('.barber_slots_container'),
@@ -814,7 +831,7 @@ const checkDateEnd = dates => {
     return dates.length === 1 ? dates[0] : dates[dates.length - 1]
 }
 
-
+// Deals with the opening of new slots for the barber and pushes them to the client side 
 const adminbarberAddInit = async () => {
     const barberData = await getbarberData(),
         timeSlots = makeTimeslots(moment().startOf('day').add(9, 'h'), [], 10),
@@ -841,6 +858,7 @@ const checkSlots = barberData => {
             })
 }
 
+// Allows the barber to edit the slots of the days he's selected
 const getEditingSlot = barberSingle => {
     [...document.querySelectorAll('.day')]
         .filter(day => barberSingle.Month === day.dataset.month)
@@ -852,6 +870,7 @@ const getEditingSlot = barberSingle => {
         })
 }
 
+// Allows the barber to edit the times of the days hes opened
 const getEditingTimeslot = barberSingle => {
     [...document.querySelectorAll('.timeslot_barber')]
         .filter(slot => barberSingle.Hours.includes(slot.innerHTML))
@@ -860,6 +879,7 @@ const getEditingTimeslot = barberSingle => {
         })
 }
 
+// Deals with the time slots the barber choices to open
 const addbarberTimes = timeSlots => {
     timeSlots.map(timeSlot => {
         $(timeSlot).click(e => {
@@ -867,7 +887,7 @@ const addbarberTimes = timeSlots => {
         })
     })
 }
-
+// Deals with the days selceted by the barber to open
 const addbarberDays = days => {
     days.map(day => {
         $(day).click(e => {
@@ -876,6 +896,7 @@ const addbarberDays = days => {
     })
 }
 
+// Pushes the times and days choosen to open to the barber side of the admin and then adds to client side once everything is selceted correctly
 const barberSubmitBtnClick = (submit_btn, method, id) => {
     $(submit_btn).click(() => {
         let provider_value = getProvidersValue(),
@@ -901,7 +922,7 @@ const barberSubmitBtnClick = (submit_btn, method, id) => {
     })
 }
 
-
+//Allows for edits to be made to slots opened by the barber
 const adminbarberEditInit = async () => {
     const barberDataAll = await getbarberData(),
         id = new URLSearchParams(new URL(window.location.href).search).get("id"),
@@ -983,29 +1004,33 @@ const displaybarberTimeslots = timeSlots => {
 
 // }
 
-// Helper Functions
+// Helper Function with CSV 
 const escapeSlashAndQuotes = csvValue => {
     return csvValue.replace(/"/g, '\\"')
 }
 
-
+// Helper Function 
 const getLastDayNum = (year, month) => {
     return new Date(year, month + 1, 0).getDate()
 }
 
+// Helper Function of week in question
 const getWeekDayNum = (year, month, day) => {
     return new Date(year, month, day).getDay()
 }
 
+// Helper Function of todays date
 const getDayContainers = () => {
     return days = [...document.querySelectorAll('.day')];
 }
 
+// Helper Function of this month
 const nameOfMonth = month => {
     const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
     return months[month]
 }
 
+// Helper Function
 const numOfmonth = month => {
     const months = {
         "December": 0,
@@ -1024,6 +1049,7 @@ const numOfmonth = month => {
     return months[month]
 }
 
+// Helper Function
 const nameOfDay = firstDay => {
     const days = {
         0: "Sunday",
@@ -1037,12 +1063,13 @@ const nameOfDay = firstDay => {
     return days[firstDay]
 }
 
-
+// Helper Function
 const getNumOfDays = (startDay, endDay) => {
     if (startDay === endDay) return [startDay];
     return [startDay, ...getNumOfDays(startDay + 1, endDay)];
 }
 
+// Helper Function
 const getSpan = firstDay => {
     const margin = document.querySelector('.margin'),
         days = {
@@ -1056,6 +1083,7 @@ const getSpan = firstDay => {
     $(margin).css('grid-column', days[firstDay])
 }
 
+// Helper Function
 const roundMinutes = (time_now) => {
     // const roundDownTo = roundTo => x => Math.floor(x / roundTo) * roundTo;
     const roundUpTo = roundTo => x => Math.ceil(x / roundTo) * roundTo;
